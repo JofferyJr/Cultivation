@@ -1,27 +1,32 @@
-# Jalan Dao · GitHub standalone status
+# Jalan Dao migration record
 
-## Keputusan projek
+## Result
 
-`JofferyJr/Cultivation` ialah versi GitHub yang **berdiri sendiri**.
+Jalan Dao was copied from the published SiteGPT build into `JofferyJr/Cultivation` as a static, standalone GitHub Pages runtime.
 
-Ia tidak lagi digunakan sebagai mirror, bridge, atau paparan kepada site terdahulu.
+The actual production snapshot identifies the live game runtime as **8.1.4** with **saveVersion 29**. Earlier planning referenced 8.1.3 because that was the latest documented target before the production bundle itself became recoverable. The production bundle is authoritative for this migration because the user's requirement is to copy the published site itself.
 
-## Peraturan pemisahan
+## Snapshot evidence
 
-1. Jangan iframe atau redirect ke site luar.
-2. Jangan tambah proses auto-sync daripada site lama.
-3. Jangan anggap perubahan pada site lama sebagai perubahan untuk GitHub.
-4. Semua kemas kini GitHub perlu dimasukkan secara terus ke repository ini.
-5. Build lama tidak boleh dilabel sebagai versi yang lebih baharu daripada kandungan sebenar.
+- Runtime files copied: **72**
+- Snapshot fetch failures: **0**
+- External runtime references discovered by the snapshot crawler: **0**
+- Cloudflare/SiteGPT challenge injection: removed as hosting-only code
+- Game runtime directory: `site/`
+- GitHub Pages project base: `/Cultivation`
 
-## Sumber yang masih tersedia
+## Independence
 
-- Offline build Jalan Dao v8.1.
-- Pek visual PGN.
-- Beberapa pakej/draf Jalan Dao terdahulu.
+The one-time snapshot workflow has been removed. The GitHub project no longer re-fetches or synchronizes with the former site.
 
-Build production v8.1.3 penuh belum tersedia sebagai package source yang boleh dipindahkan terus melalui connector semasa. Oleh itu repo tidak akan berpura-pura bahawa build lama ialah v8.1.3.
+Runtime auditing rejects:
+- the former SiteGPT host;
+- iframe embedding;
+- refresh redirects;
+- direct fetch/navigation back to SiteGPT.
 
-## GitHub Pages
+## Deployment
 
-`.github/workflows/pages.yml` menerbitkan repository root sebagai Static HTML. Deployment ini hanya menggunakan kandungan di repository GitHub ini.
+`.github/workflows/pages.yml` deploys only `site/`.
+
+`.github/workflows/verify-migration.yml` runs unit tests, release auditing, and an interactive Playwright smoke test before the migration is considered verified.

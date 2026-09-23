@@ -1,25 +1,30 @@
 # Jalan Dao · Dunia Xianxia
 
-Repository rasmi **GitHub Edition** untuk **Jalan Dao**, game sandbox kultivasi Xianxia.
+Repository rasmi **GitHub standalone** untuk Jalan Dao.
 
-- Repository: `JofferyJr/Cultivation`
-- Deployment: GitHub Pages / Static HTML
-- Mode: **standalone**
-- Auto-sync dengan site lain: **tiada**
+- Game version migrated from the published build: **8.1.4**
+- Save format marker: **saveVersion 29**
+- Deployment: **GitHub Pages / Static HTML**
+- Runtime source: `site/`
+- Auto-sync with the former site: **disabled**
 
-## Pemisahan versi
+## Play
 
-Versi GitHub dan versi site lama dianggap sebagai dua penerbitan berasingan.
+https://jofferyjr.github.io/Cultivation/
 
-- Perubahan di GitHub **tidak** mengubah site lama.
-- Perubahan pada site lama **tidak** disalin ke GitHub secara automatik.
-- Tiada iframe, redirect, API sync, atau bridge ke site lama digunakan dalam build GitHub.
-- Selepas ini, perubahan khusus GitHub boleh berkembang secara bebas.
+## Standalone status
 
-## Status build
+The game files in `site/` are a one-time production snapshot of the published Jalan Dao build. The GitHub runtime does **not** iframe, redirect to, proxy, or fetch the former SiteGPT deployment.
 
-Repo kini mempunyai asas Static HTML dan workflow GitHub Pages. Source production penuh game akan dimasukkan ke repo ini sebagai build GitHub tersendiri apabila pakej sumber yang sesuai tersedia.
+After the one-time copy completed, the snapshot workflow was removed. Future GitHub changes are independent and do not automatically modify or re-copy the old site.
 
-## Project
+## Verification
 
-Jalan Dao merangkumi sistem penciptaan watak, Spiritual Root, kultivasi, sekte, salasilah keluarga, NPC, inventori, Bestiari, Portal Laut, profesion, artifak, hubungan dan eksplorasi dunia.
+The repository includes:
+
+- static-runtime audit for old-host dependencies;
+- release audit for version 8.1.4 and saveVersion 29;
+- unit tests for migration tooling;
+- a Playwright browser smoke test that blocks the former SiteGPT host, loads `/Cultivation/`, hydrates the game, and opens **Tetapan**.
+
+GitHub Pages deploys only the `site/` directory.
