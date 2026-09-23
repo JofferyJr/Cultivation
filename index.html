@@ -3,40 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1110" />
-  <meta name="description" content="Jalan Dao · Dunia Xianxia — GitHub mirror bridge" />
+  <meta name="theme-color" content="#08100e" />
+  <meta name="description" content="Jalan Dao · Dunia Xianxia — GitHub Edition" />
   <title>Jalan Dao · Dunia Xianxia</title>
   <style>
-    :root{color-scheme:dark;background:#08100e;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    *{box-sizing:border-box}html,body{height:100%;margin:0}body{overflow:hidden;background:#08100e}
-    .shell{height:100%;display:grid;grid-template-rows:auto 1fr}.bar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #22312d;background:#0d1714;color:#dce9e4}
-    .brand{font-weight:750;letter-spacing:.02em}.status{font-size:12px;color:#a8bbb4}.actions{display:flex;gap:8px}.btn{color:#dce9e4;text-decoration:none;border:1px solid #314740;border-radius:9px;padding:7px 10px;background:#13221d}.btn:hover{background:#193027}
-    iframe{width:100%;height:100%;border:0;background:#0b1110}
-    .fallback{position:fixed;inset:auto 16px 16px 16px;max-width:720px;margin:auto;background:#101c18;border:1px solid #2a4038;border-radius:12px;padding:12px 14px;color:#c9d9d3;font-size:13px;box-shadow:0 12px 35px #0008}
-    @media(max-width:680px){.status{display:none}.bar{padding:8px}.brand{font-size:14px}.btn{font-size:12px;padding:6px 8px}}
+    :root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#08100e;color:#e3eee9}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}body{min-height:100vh;background:radial-gradient(circle at 50% 0,#173229 0,#0b1713 32%,#07100d 70%);padding:24px}
+    .wrap{width:min(980px,100%);margin:0 auto}.hero{padding:56px 28px 30px;text-align:center}.seal{font-size:64px;line-height:1}.eyebrow{margin-top:12px;color:#a8c4b9;font-size:13px;letter-spacing:.18em;text-transform:uppercase}.hero h1{margin:10px 0 8px;font-size:clamp(34px,7vw,68px);letter-spacing:-.04em}.lead{max-width:700px;margin:0 auto;color:#b8cbc4;line-height:1.7}
+    .panel{margin-top:22px;border:1px solid #29463b;background:#0e1b17dd;border-radius:18px;padding:22px;box-shadow:0 18px 60px #0005}.status{display:flex;gap:12px;align-items:flex-start}.dot{width:11px;height:11px;margin-top:6px;border-radius:999px;background:#68d6a8;box-shadow:0 0 18px #68d6a877;flex:none}.status strong{display:block;margin-bottom:5px}.status p{margin:0;color:#adc2ba;line-height:1.6}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}.card{border:1px solid #223a32;background:#0b1713;border-radius:14px;padding:17px}.card b{display:block;margin-bottom:5px}.card span{color:#97aea5;font-size:14px;line-height:1.5}
+    .actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{display:inline-block;text-decoration:none;color:#e8f5ef;border:1px solid #31594b;background:#14261f;border-radius:10px;padding:10px 14px}.btn:hover{background:#1a3028}.muted{margin-top:20px;text-align:center;color:#789087;font-size:12px}
+    @media(max-width:720px){body{padding:12px}.hero{padding:36px 12px 20px}.grid{grid-template-columns:1fr}.panel{padding:16px}}
   </style>
 </head>
 <body>
-  <main class="shell">
-    <header class="bar">
-      <div>
-        <div class="brand">道 Jalan Dao · Dunia Xianxia</div>
-        <div class="status">GitHub mirror bridge · source migration in progress</div>
+  <main class="wrap">
+    <section class="hero">
+      <div class="seal">道</div>
+      <div class="eyebrow">GitHub Edition</div>
+      <h1>Jalan Dao</h1>
+      <p class="lead">Dunia Xianxia untuk projek GitHub yang berdiri sendiri. Versi GitHub ini tidak memuat kandungan daripada site lain dan tidak diselaraskan secara automatik dengan mana-mana penerbitan luar.</p>
+    </section>
+
+    <section class="panel">
+      <div class="status">
+        <span class="dot"></span>
+        <div>
+          <strong>Versi GitHub bebas</strong>
+          <p>Repo ini kini menggunakan fail tempatan sahaja. Perubahan pada GitHub tidak mengubah site lama, dan perubahan pada site lama tidak akan masuk ke GitHub secara automatik.</p>
+        </div>
       </div>
-      <nav class="actions">
-        <a class="btn" href="https://jalan-dao-xianxia.jofferyjr.chatgpt.site" target="_blank" rel="noopener">Buka site asal</a>
-        <a class="btn" href="https://github.com/JofferyJr/Cultivation" target="_blank" rel="noopener">GitHub</a>
-      </nav>
-    </header>
-    <iframe
-      title="Jalan Dao"
-      src="https://jalan-dao-xianxia.jofferyjr.chatgpt.site"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allow="fullscreen"
-    ></iframe>
+
+      <div class="grid">
+        <div class="card"><b>Kultivasi</b><span>Spiritual Root, jalan kultivasi, penembusan alam dan perkembangan watak.</span></div>
+        <div class="card"><b>Dunia</b><span>Penerokaan, sekte, lokasi, Portal Laut, inventori dan Bestiari.</span></div>
+        <div class="card"><b>Keluarga</b><span>Salasilah, hubungan, NPC, warisan keluarga dan perkembangan generasi.</span></div>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="https://github.com/JofferyJr/Cultivation">Lihat Repository</a>
+      </div>
+      <div class="muted">Standalone static build foundation · tiada iframe · tiada redirect · tiada auto-sync</div>
+    </section>
   </main>
-  <div class="fallback">
-    Jika paparan game tidak muncul di dalam halaman ini kerana sekatan iframe, gunakan butang <strong>Buka site asal</strong>. Repo ini sedang disediakan untuk menerima build v8.1.3 penuh apabila source production tersedia.
-  </div>
 </body>
 </html>
