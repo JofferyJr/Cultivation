@@ -176,9 +176,10 @@
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-checked", "class"] });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
+  const startAfterHydration = () => window.setTimeout(start, 900);
+  if (document.readyState === "complete") {
+    startAfterHydration();
   } else {
-    start();
+    window.addEventListener("load", startAfterHydration, { once: true });
   }
 })();
