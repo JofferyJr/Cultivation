@@ -13,5 +13,8 @@ class PagesWorkflowTests(unittest.TestCase):
     def test_duplicate_static_workflow_is_absent(self):
         self.assertFalse((ROOT / '.github/workflows/static.yml').exists())
 
+    def test_one_time_snapshot_workflow_is_removed_before_release(self):
+        self.assertFalse((ROOT / '.github/workflows/migrate-sitegpt.yml').exists())
+
 if __name__ == '__main__':
     unittest.main()
