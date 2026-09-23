@@ -30,7 +30,7 @@ test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT'
   await talentButtons.filter({ hasText: 'True Love' }).click();
   await talentButtons.filter({ hasText: 'Genius' }).click();
   await talentButtons.filter({ hasText: 'Jujur' }).click();
-  await expect(page.getByText('4/4 dipilih')).toBeVisible();
+  await expect(page.getByText('4/4 dipilih', { exact: true })).toBeVisible();
 
   const fifth = talentButtons.filter({ hasText: 'Berani' });
   await expect(fifth).toBeDisabled();
@@ -53,7 +53,7 @@ test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT'
   const age = page.locator('#starting-age');
   await age.fill('17');
   await age.blur();
-  await expect(page.getByText('3/4 dipilih')).toBeVisible();
+  await expect(page.getByText('3/4 dipilih', { exact: true })).toBeVisible();
   await expect(talentButtons.filter({ hasText: 'True Love' })).toHaveCount(0);
   await widthOk();
 
