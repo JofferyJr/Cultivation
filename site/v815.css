@@ -1,0 +1,239 @@
+/* Boundless Cultivation v8.1.5 */
+.multi-talent-group,
+.multi-talent-grid,
+.player-portrait-picker,
+.true-love-creation,
+.player-portrait-layout,
+.dao-card,
+[data-slot="card-content"] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.multi-talent-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.multi-talent-count {
+  flex: none;
+  border: 1px solid #6f5a31;
+  border-radius: 999px;
+  padding: .2rem .55rem;
+  color: #e2c479;
+  font-size: .7rem;
+}
+
+.multi-talent-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem;
+}
+
+.multi-talent-grid > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.multi-talent-grid .choice-card[disabled] {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.multi-talent-notice {
+  display: block;
+  margin-top: .6rem;
+  color: #8fa198;
+  font-size: .72rem;
+}
+
+.player-portrait-options[data-bc815-compact],
+.true-love-face-grid[data-bc815-compact] {
+  display: block !important;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.player-portrait-options[data-bc815-compact] > button:not([aria-checked="true"]),
+.true-love-face-grid[data-bc815-compact] > button:not([aria-checked="true"]) {
+  display: none !important;
+}
+
+.player-portrait-options[data-bc815-compact] > button[aria-checked="true"],
+.true-love-face-grid[data-bc815-compact] > button[aria-checked="true"] {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  display: grid !important;
+  grid-template-columns: auto minmax(0,1fr);
+  align-items: center;
+  gap: .7rem;
+  overflow: hidden;
+  text-align: left;
+}
+
+.player-portrait-options[data-bc815-compact] > button[aria-checked="true"]::after,
+.true-love-face-grid[data-bc815-compact] > button[aria-checked="true"]::after {
+  grid-column: 1 / -1;
+  display: block;
+  margin-top: .25rem;
+  border-top: 1px solid rgba(214,180,103,.25);
+  padding-top: .55rem;
+  color: #e5c77d;
+  font-weight: 700;
+  text-align: center;
+}
+
+.player-portrait-options[data-bc815-compact] > button[aria-checked="true"]::after {
+  content: "Pilih Muka Pemain";
+}
+
+.true-love-face-grid[data-bc815-compact] > button[aria-checked="true"]::after {
+  content: "Pilih Muka Pasangan";
+}
+
+.bc815-paper-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 3vh 3vw;
+  background: rgba(2,8,6,.72);
+  backdrop-filter: blur(4px);
+}
+
+.bc815-paper-dialog {
+  position: relative;
+  width: min(94vw,72rem);
+  max-width: 94vw;
+  max-height: 92vh;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #8b6f36;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,244,204,.14), transparent 30%),
+    linear-gradient(145deg,#2d2417,#1d1a11 55%,#15150f);
+  box-shadow: 0 24px 80px rgba(0,0,0,.62);
+  color: #f4ead1;
+}
+
+.bc815-paper-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid rgba(214,180,103,.25);
+}
+
+.bc815-paper-header h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem,3vw,2rem);
+}
+
+.bc815-paper-header p {
+  margin: .35rem 0 0;
+  color: #b9c8bf;
+  font-size: .82rem;
+}
+
+.bc815-paper-close {
+  flex: none;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid #806936;
+  border-radius: 999px;
+  background: #171a12;
+  color: #f2d990;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bc815-paper-scroll {
+  max-height: calc(92vh - 6rem);
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem 1.25rem 1.35rem;
+}
+
+.bc815-paper-group + .bc815-paper-group {
+  margin-top: 1.25rem;
+}
+
+.bc815-paper-group h3 {
+  margin: 0 0 .65rem;
+  color: #e5c77d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+
+.bc815-paper-grid {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(6,minmax(0,1fr));
+  gap: .65rem;
+}
+
+.bc815-paper-choice {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #4c4934;
+  border-radius: 12px;
+  background: rgba(9,19,15,.8);
+  color: #e8dfca;
+  padding: .55rem;
+  cursor: pointer;
+}
+
+.bc815-paper-choice[aria-checked="true"] {
+  border-color: #d6b467;
+  box-shadow: 0 0 0 2px rgba(214,180,103,.22);
+}
+
+.bc815-paper-choice img,
+.bc815-paper-choice [role="img"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 9px;
+}
+
+.bc815-paper-choice b,
+.bc815-paper-choice small {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.bc815-paper-choice b {
+  margin-top: .45rem;
+  font-size: .76rem;
+}
+
+.bc815-paper-choice small {
+  margin-top: .15rem;
+  color: #93a399;
+  font-size: .62rem;
+}
+
+@media(max-width:1000px) {
+  .bc815-paper-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+}
+
+@media(max-width:640px) {
+  .multi-talent-grid { grid-template-columns: 1fr; }
+  .bc815-paper-overlay { padding: 2vh 2vw; }
+  .bc815-paper-dialog { width: 96vw; max-width: 96vw; max-height: 94vh; }
+  .bc815-paper-scroll { max-height: calc(94vh - 5.5rem); padding: .8rem; }
+  .bc815-paper-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .5rem; }
+}
