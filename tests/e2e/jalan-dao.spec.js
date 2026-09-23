@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-test('standalone Jalan Dao 8.1.4 hydrates without SiteGPT', async ({ page }) => {
+test('standalone Boundless Cultivation 8.1.4 hydrates without SiteGPT', async ({ page }) => {
   const oldHostRequests = [];
   page.on('request', request => {
     if (request.url().includes('jalan-dao-xianxia.jofferyjr.chatgpt.site')) {
@@ -10,8 +10,8 @@ test('standalone Jalan Dao 8.1.4 hydrates without SiteGPT', async ({ page }) => 
   await page.route('**://jalan-dao-xianxia.jofferyjr.chatgpt.site/**', route => route.abort());
 
   await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
-  await expect(page).toHaveTitle(/Jalan Dao/i);
-  await expect(page.getByText('Jalan Dao', { exact: true }).first()).toBeVisible();
+  await expect(page).toHaveTitle(/Boundless Cultivation/i);
+  await expect(page.getByText('Boundless Cultivation', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Versi 8.1.4').first()).toBeVisible();
 
   const settings = page.getByRole('button', { name: 'Tetapan' }).first();

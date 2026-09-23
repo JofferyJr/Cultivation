@@ -1,6 +1,6 @@
-# Jalan Dao · Dunia Xianxia
+# Boundless Cultivation · Dunia Xianxia
 
-Repository rasmi **GitHub standalone** untuk Jalan Dao.
+Repository rasmi **GitHub standalone** untuk Boundless Cultivation.
 
 - Game version migrated from the published build: **8.1.4**
 - Save format marker: **saveVersion 29**
@@ -14,7 +14,7 @@ https://jofferyjr.github.io/Cultivation/
 
 ## Standalone status
 
-The game files in `site/` are a one-time production snapshot of the published Jalan Dao build. The GitHub runtime does **not** iframe, redirect to, proxy, or fetch the former SiteGPT deployment.
+The game files in `site/` are a one-time production snapshot of the published Boundless Cultivation build. The GitHub runtime does **not** iframe, redirect to, proxy, or fetch the former SiteGPT deployment.
 
 After the one-time copy completed, the snapshot workflow was removed. Future GitHub changes are independent and do not automatically modify or re-copy the old site.
 
