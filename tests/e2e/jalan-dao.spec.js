@@ -1,3 +1,5 @@
+const { test, expect } = require('@playwright/test');
+
 test('v8.1.5 page module imports directly', async ({ page }) => {
   await page.goto('/Cultivation/v815-probe.html', { waitUntil: 'networkidle' });
   const output = await page.locator('#out').innerText();
@@ -5,7 +7,6 @@ test('v8.1.5 page module imports directly', async ({ page }) => {
   expect(output).toBe('OK 8.1.5');
 });
 
-const { test, expect } = require('@playwright/test');
 
 test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT', async ({ page }) => {
   const oldHostRequests = [];
