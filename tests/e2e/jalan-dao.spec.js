@@ -1,3 +1,10 @@
+test('v8.1.5 page module imports directly', async ({ page }) => {
+  await page.goto('/Cultivation/v815-probe.html', { waitUntil: 'networkidle' });
+  const output = await page.locator('#out').innerText();
+  console.log('BC815_MODULE_PROBE', JSON.stringify(output));
+  expect(output).toBe('OK 8.1.5');
+});
+
 const { test, expect } = require('@playwright/test');
 
 test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT', async ({ page }) => {
