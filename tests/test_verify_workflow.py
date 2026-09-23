@@ -10,7 +10,8 @@ class VerifyWorkflowTests(unittest.TestCase):
         self.assertIn('python -m unittest discover', text)
         self.assertIn('python tools/release_audit.py', text)
         self.assertIn('site', text)
-        self.assertIn('node --test tests/save-manager.test.mjs', text)\n        self.assertIn('npm install', text)
+        self.assertIn('node --test tests/save-manager.test.mjs', text)
+        self.assertIn('npm install', text)
         self.assertIn('playwright install', text)
         self.assertIn('npm run test:e2e', text)
 
