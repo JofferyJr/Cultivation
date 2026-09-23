@@ -31,7 +31,7 @@ class ReleaseAuditTests(unittest.TestCase):
         try:
             result = audit_release(root)
             self.assertEqual(result['errors'], [])
-            self.assertTrue(result['version_8_1_3'])
+            self.assertTrue(result['version_8_1_4'])
             self.assertTrue(result['save_version_29'])
         finally:
             tmp.cleanup()
@@ -40,8 +40,8 @@ class ReleaseAuditTests(unittest.TestCase):
         tmp, root = self._make_root(version=False)
         try:
             result = audit_release(root)
-            self.assertTrue(any('8.1.3' in e for e in result['errors']))
-            self.assertTrue(any('saveVersion 29' in e for e in result['errors']))
+            self.assertTrue(any('8.1.4' in e for e in result['errors']))
+            self.assertFalse(any('saveVersion 29' in e for e in result['errors']))
         finally:
             tmp.cleanup()
 
