@@ -17,7 +17,11 @@ test('standalone Boundless Cultivation 8.1.4 hydrates without SiteGPT', async ({
   const settings = page.getByRole('button', { name: 'Tetapan' }).first();
   await expect(settings).toBeVisible();
   await settings.click();
-  await expect(page.getByRole('dialog')).toBeVisible();
+  const settingsDialog = page.getByRole('dialog');
+  await expect(settingsDialog).toBeVisible();
+  await expect(settingsDialog.getByText('Data kemajuan')).toHaveCount(0);
+  await expect(settingsDialog.getByText('Muat Game')).toHaveCount(0);
+  await expect(settingsDialog.getByText('Simpan perjalanan semasa atau muat simpanan terdahulu pada peranti ini.')).toHaveCount(0);
 
   expect(oldHostRequests).toEqual([]);
 });
