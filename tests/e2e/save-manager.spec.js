@@ -15,6 +15,7 @@ test('save manager lives inside Settings and supports slots, export and import',
   });
 
   await expect(page.getByRole('button', { name: 'Simpan & Export' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Simpan$/ })).toHaveCount(0);
   await page.getByRole('button', { name: 'Tetapan' }).first().click();
 
   const settings = page.getByRole('dialog');

@@ -151,9 +151,12 @@ function bindManager(root) {
     const slot = Number(button.dataset.slot || 0);
 
     if (action === "save") {
+      if (typeof window.__boundlessSaveCurrent === "function") {
+        window.__boundlessSaveCurrent();
+      }
       const active = readActiveSave();
       if (!active) {
-        setStatus(root, "Belum ada save aktif. Gunakan Simpan cepat dalam game dahulu.", "error");
+        setStatus(root, "Belum ada permainan aktif untuk disimpan.", "error");
         return;
       }
       const labelInput = root.querySelector(`input[data-label-slot="${slot}"]`);
