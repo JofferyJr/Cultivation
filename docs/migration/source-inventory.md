@@ -27,4 +27,4 @@ The detailed SHA-256 inventory is stored in `docs/migration/live-snapshot-manife
 
 ## Historical fallback sources
 
-Earlier offline artifacts such as Jalan Dao v8.1 and PGN visual assets remain useful as historical recovery material, but they are **not** the deployed GitHub runtime because the published 8.1.4 production files were successfully recovered directly.
+Earlier offline artifacts from the former Jalan Dao name, such as v8.1 and PGN visual assets remain useful as historical recovery material, but they are **not** the deployed GitHub runtime because the published 8.1.4 production files were successfully recovered directly.
