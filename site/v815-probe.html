@@ -1,0 +1,13 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>BC815 Module Probe</title></head>
+<body><pre id="out">loading</pre>
+<script type="module">
+const out=document.getElementById('out');
+try {
+  const mod=await import('/Cultivation/assets/page-B87MruAb.js');
+  out.textContent='OK '+String(mod.GAME_VERSION||'');
+} catch (error) {
+  out.textContent='ERROR\n'+String(error?.stack||error);
+}
+</script>
+</body></html>
