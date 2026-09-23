@@ -1,0 +1,51 @@
+name: One-time SiteGPT snapshot
+
+on:
+  push:
+    branches: ["migration/sitegpt-standalone"]
+    paths:
+      - ".github/workflows/migrate-sitegpt.yml"
+      - "tools/snapshot_site.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    if: ${{ !contains(github.event.head_commit.message || '', '[site-migration]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@v4
+        with:
+          ref: migration/sitegpt-standalone
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Snapshot the published SiteGPT build
+        run: |
+          rm -rf site
+          python tools/snapshot_site.py \
+            --url https://jalan-dao-xianxia.jofferyjr.chatgpt.site/ \
+            --output site \
+            --project-base /Cultivation
+          test -s site/index.html
+          mkdir -p docs/migration
+          mv site/snapshot-manifest.json docs/migration/live-snapshot-manifest.json
+
+      - name: Record snapshot in migration branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A site docs/migration/live-snapshot-manifest.json
+          if git diff --cached --quiet; then
+            echo "Snapshot already matches the published site."
+            exit 0
+          fi
+          git commit -m "chore: snapshot SiteGPT production [site-migration]"
+          git push origin HEAD:migration/sitegpt-standalone
