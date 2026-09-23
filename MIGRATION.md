@@ -1,22 +1,27 @@
-# Jalan Dao migration status
+# Jalan Dao · GitHub standalone status
 
-## Target
+## Keputusan projek
 
-Move the current Jalan Dao web build into `JofferyJr/Cultivation` and make it deployable with GitHub Pages.
+`JofferyJr/Cultivation` ialah versi GitHub yang **berdiri sendiri**.
 
-## Verified sources currently available
+Ia tidak lagi digunakan sebagai mirror, bridge, atau paparan kepada site terdahulu.
 
-- Live project URL: https://jalan-dao-xianxia.jofferyjr.chatgpt.site
-- Offline build available in Library: Jalan Dao v8.1
-- PGN visual pack available in Library
-- The ChatGPT Site projection is readable as rendered text, but its production source bundle is not exportable through the available connector.
+## Peraturan pemisahan
 
-## Important
+1. Jangan iframe atau redirect ke site luar.
+2. Jangan tambah proses auto-sync daripada site lama.
+3. Jangan anggap perubahan pada site lama sebagai perubahan untuk GitHub.
+4. Semua kemas kini GitHub perlu dimasukkan secara terus ke repository ini.
+5. Build lama tidak boleh dilabel sebagai versi yang lebih baharu daripada kandungan sebenar.
 
-The repository must **not** label the older v8.1 offline HTML as v8.1.3.
+## Sumber yang masih tersedia
 
-Until the actual v8.1.3 production source/package is available, `index.html` acts as a bridge to the live project. When the correct package is recovered, replace the bridge with the self-contained GitHub build and retain this file as migration history.
+- Offline build Jalan Dao v8.1.
+- Pek visual PGN.
+- Beberapa pakej/draf Jalan Dao terdahulu.
+
+Build production v8.1.3 penuh belum tersedia sebagai package source yang boleh dipindahkan terus melalui connector semasa. Oleh itu repo tidak akan berpura-pura bahawa build lama ialah v8.1.3.
 
 ## GitHub Pages
 
-A Pages workflow is included under `.github/workflows/pages.yml`. It deploys the repository root as a static site.
+`.github/workflows/pages.yml` menerbitkan repository root sebagai Static HTML. Deployment ini hanya menggunakan kandungan di repository GitHub ini.
