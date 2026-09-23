@@ -139,7 +139,6 @@ function buildUi() {
   overlay.addEventListener("click", (event) => {
     if (event.target === overlay) hide();
   });
-  dialog.addEventListener("click", (event) => event.stopPropagation());
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !overlay.hidden) hide();
   });
