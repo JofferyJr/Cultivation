@@ -28,5 +28,7 @@ jobs:
         run: npm install
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
+      - name: Check release bundle syntax
+        run: node --check site/assets/page-B87MruAb.js
       - name: Browser smoke test
         run: npm run test:e2e
