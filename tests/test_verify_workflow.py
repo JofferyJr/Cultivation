@@ -10,6 +10,9 @@ class VerifyWorkflowTests(unittest.TestCase):
         self.assertIn('python -m unittest discover', text)
         self.assertIn('python tools/release_audit.py', text)
         self.assertIn('site', text)
+        self.assertIn('npm install', text)
+        self.assertIn('playwright install', text)
+        self.assertIn('npm run test:e2e', text)
 
 if __name__ == '__main__':
     unittest.main()
