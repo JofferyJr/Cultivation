@@ -77,176 +77,9 @@ function formatTime(value) {
   }).format(date);
 }
 
-function buildUi() {
-  if (document.getElementById("bc-save-manager-root")) return;
-
-  const root = document.createElement("div");
-  root.id = "bc-save-manager-root";
-  root.innerHTML = `
-    <button type="button" class="bc-save-fab" aria-haspopup="dialog" aria-controls="bc-save-dialog">
-      <span aria-hidden="true">💾</span><span>Simpan & Export</span>
-    </button>
-    <div class="bc-save-overlay" hidden>
-      <section id="bc-save-dialog" class="bc-save-dialog" role="dialog" aria-modal="true" aria-labelledby="bc-save-title">
-        <header class="bc-save-head">
-          <div>
-            <p class="bc-save-kicker">Boundless Cultivation</p>
-            <h2 id="bc-save-title">Pengurus Simpanan</h2>
-            <p>5 slot manual · Import / Export JSON · save lama kekal serasi</p>
-          </div>
-          <button type="button" class="bc-save-close" aria-label="Tutup pengurus simpanan">×</button>
-        </header>
-
-        <div class="bc-active-save" data-role="active-summary"></div>
-        <div class="bc-save-status" role="status" aria-live="polite"></div>
-        <div class="bc-save-slots" data-role="slots"></div>
-
-        <footer class="bc-save-tools">
-          <label>
-            <span>Import ke slot</span>
-            <select id="bc-save-import-slot">
-              ${Array.from({ length: MAX_SAVE_SLOTS }, (_, i) => `<option value="${i + 1}">Slot ${i + 1}</option>`).join("")}
-            </select>
-          </label>
-          <input id="bc-save-file" type="file" accept=".json,application/json" hidden>
-          <button type="button" data-action="import">Import Save</button>
-          <button type="button" data-action="export-all">Export Semua</button>
-        </footer>
-      </section>
-    </div>
-  `;
-  document.body.appendChild(root);
-
-  const overlay = $(".bc-save-overlay", root);
-  const dialog = $(".bc-save-dialog", root);
-  const fab = $(".bc-save-fab", root);
-  const close = $(".bc-save-close", root);
-
-  const open = () => {
-    render(root);
-    overlay.hidden = false;
-    document.documentElement.classList.add("bc-save-modal-open");
-    close.focus();
-  };
-  const hide = () => {
-    overlay.hidden = true;
-    document.documentElement.classList.remove("bc-save-modal-open");
-    fab.focus();
-  };
-
-  fab.addEventListener("click", open);
-  close.addEventListener("click", hide);
-  overlay.addEventListener("click", (event) => {
-    if (event.target === overlay) hide();
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !overlay.hidden) hide();
-  });
-
-  root.addEventListener("click", async (event) => {
-    const button = event.target.closest("button[data-action]");
-    if (!button) return;
-    const action = button.dataset.action;
-    const slot = Number(button.dataset.slot || 0);
-
-    if (action === "save") {
-      const active = readActiveSave();
-      if (!active) return setStatus(root, "Belum ada save aktif. Gunakan butang Simpan dalam game dahulu.", "error");
-      const labelInput = root.querySelector(`input[data-label-slot="${slot}"]`);
-      const existing = readSlot(slot);
-      const label = labelInput?.value?.trim() || existing?.label || `Slot ${slot}`;
-      writeSlot(makeSlotRecord(active, slot, new Date().toISOString(), label));
-      setStatus(root, `Slot ${slot} disimpan.`, "ok");
-      render(root);
-      return;
-    }
-
-    if (action === "load") {
-      const record = readSlot(slot);
-      if (!record) return;
-      if (!confirm(`Muat Slot ${slot}? Kemajuan aktif yang belum disimpan boleh hilang.`)) return;
-      localStorage.setItem(LEGACY_SAVE_KEY, JSON.stringify(record.save));
-      location.reload();
-      return;
-    }
-
-    if (action === "export") {
-      const record = readSlot(slot);
-      if (!record) return;
-      const summary = summarizeSave(record);
-      downloadJson(
-        createSingleExport(record),
-        `boundless-cultivation-slot-${slot}-${safeFilenamePart(summary.name)}-${stampForFilename()}.json`
-      );
-      setStatus(root, `Slot ${slot} diexport.`, "ok");
-      return;
-    }
-
-    if (action === "delete") {
-      const record = readSlot(slot);
-      if (!record) return;
-      if (!confirm(`Padam Slot ${slot}? Tindakan ini tidak memadam save aktif.`)) return;
-      localStorage.removeItem(slotKey(slot));
-      setStatus(root, `Slot ${slot} dipadam.`, "ok");
-      render(root);
-      return;
-    }
-
-    if (action === "import") {
-      $("#bc-save-file", root).click();
-      return;
-    }
-
-    if (action === "export-all") {
-      const records = occupiedSlots();
-      if (!records.some(Boolean)) return setStatus(root, "Tiada slot untuk diexport.", "error");
-      downloadJson(createBundleExport(records), `boundless-cultivation-all-saves-${stampForFilename()}.json`);
-      setStatus(root, "Semua slot berisi diexport.", "ok");
-    }
-  });
-
-  const fileInput = $("#bc-save-file", root);
-  fileInput.addEventListener("change", async () => {
-    const file = fileInput.files?.[0];
-    if (!file) return;
-    const targetSlot = Number($("#bc-save-import-slot", root).value || 1);
-    try {
-      const parsed = parseImportPayload(await file.text(), targetSlot);
-      if (parsed.kind === "bundle") {
-        if (!confirm("Import bundle akan menggantikan slot yang sepadan. Teruskan?")) {
-          fileInput.value = "";
-          return;
-        }
-        for (const record of parsed.records) writeSlot(record);
-        setStatus(root, `${parsed.records.length} slot diimport.`, "ok");
-      } else {
-        const incoming = parsed.records[0];
-        const record = makeSlotRecord(
-          incoming.save,
-          targetSlot,
-          new Date().toISOString(),
-          incoming.label || `Import Slot ${targetSlot}`
-        );
-        if (readSlot(targetSlot) && !confirm(`Slot ${targetSlot} sudah berisi. Gantikan?`)) {
-          fileInput.value = "";
-          return;
-        }
-        writeSlot(record);
-        setStatus(root, `Save diimport ke Slot ${targetSlot}.`, "ok");
-      }
-      render(root);
-    } catch (error) {
-      setStatus(root, error?.message || "Import gagal.", "error");
-    } finally {
-      fileInput.value = "";
-    }
-  });
-
-  render(root);
-}
-
 function setStatus(root, message, kind = "") {
   const status = $(".bc-save-status", root);
+  if (!status) return;
   status.textContent = message;
   status.dataset.kind = kind;
 }
@@ -254,19 +87,22 @@ function setStatus(root, message, kind = "") {
 function render(root) {
   const active = readActiveSave();
   const activeBox = $('[data-role="active-summary"]', root);
-  if (active) {
-    const summary = summarizeSave(makeSlotRecord(active, 1));
-    activeBox.innerHTML = `
-      <strong>Save aktif</strong>
-      <span>${escapeHtml(summary.name)}</span>
-      <span>v${escapeHtml(summary.version)} · Hari ${summary.day}</span>
-      <span>${escapeHtml(summary.realm)}</span>
-    `;
-  } else {
-    activeBox.innerHTML = "<strong>Save aktif</strong><span>Belum ada save aktif.</span>";
+  if (activeBox) {
+    if (active) {
+      const summary = summarizeSave(makeSlotRecord(active, 1));
+      activeBox.innerHTML = `
+        <strong>Save aktif</strong>
+        <span>${escapeHtml(summary.name)}</span>
+        <span>v${escapeHtml(summary.version)} · Hari ${summary.day}</span>
+        <span>${escapeHtml(summary.realm)}</span>
+      `;
+    } else {
+      activeBox.innerHTML = "<strong>Save aktif</strong><span>Belum ada save aktif.</span>";
+    }
   }
 
   const slots = $('[data-role="slots"]', root);
+  if (!slots) return;
   slots.innerHTML = Array.from({ length: MAX_SAVE_SLOTS }, (_, index) => {
     const slot = index + 1;
     const record = readSlot(slot);
@@ -304,10 +140,168 @@ function render(root) {
   }).join("");
 }
 
+function bindManager(root) {
+  if (root.dataset.boundlessSaveBound === "true") return;
+  root.dataset.boundlessSaveBound = "true";
+
+  root.addEventListener("click", async (event) => {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+    const action = button.dataset.action;
+    const slot = Number(button.dataset.slot || 0);
+
+    if (action === "save") {
+      const active = readActiveSave();
+      if (!active) {
+        setStatus(root, "Belum ada save aktif. Gunakan Simpan cepat dalam game dahulu.", "error");
+        return;
+      }
+      const labelInput = root.querySelector(`input[data-label-slot="${slot}"]`);
+      const existing = readSlot(slot);
+      const label = labelInput?.value?.trim() || existing?.label || `Slot ${slot}`;
+      writeSlot(makeSlotRecord(active, slot, new Date().toISOString(), label));
+      render(root);
+      setStatus(root, `Slot ${slot} disimpan.`, "ok");
+      return;
+    }
+
+    if (action === "load") {
+      const record = readSlot(slot);
+      if (!record) return;
+      if (!confirm(`Muat Slot ${slot}? Kemajuan aktif yang belum disimpan boleh hilang.`)) return;
+      localStorage.setItem(LEGACY_SAVE_KEY, JSON.stringify(record.save));
+      location.reload();
+      return;
+    }
+
+    if (action === "export") {
+      const record = readSlot(slot);
+      if (!record) return;
+      const summary = summarizeSave(record);
+      downloadJson(
+        createSingleExport(record),
+        `boundless-cultivation-slot-${slot}-${safeFilenamePart(summary.name)}-${stampForFilename()}.json`
+      );
+      setStatus(root, `Slot ${slot} diexport.`, "ok");
+      return;
+    }
+
+    if (action === "delete") {
+      const record = readSlot(slot);
+      if (!record) return;
+      if (!confirm(`Padam Slot ${slot}? Tindakan ini tidak memadam save aktif.`)) return;
+      localStorage.removeItem(slotKey(slot));
+      render(root);
+      setStatus(root, `Slot ${slot} dipadam.`, "ok");
+      return;
+    }
+
+    if (action === "import") {
+      $("#bc-save-file", root)?.click();
+      return;
+    }
+
+    if (action === "export-all") {
+      const records = occupiedSlots();
+      if (!records.some(Boolean)) {
+        setStatus(root, "Tiada slot untuk diexport.", "error");
+        return;
+      }
+      downloadJson(createBundleExport(records), `boundless-cultivation-all-saves-${stampForFilename()}.json`);
+      setStatus(root, "Semua slot berisi diexport.", "ok");
+    }
+  });
+
+  const fileInput = $("#bc-save-file", root);
+  fileInput?.addEventListener("change", async () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    const targetSlot = Number($("#bc-save-import-slot", root)?.value || 1);
+    try {
+      const parsed = parseImportPayload(await file.text(), targetSlot);
+      if (parsed.kind === "bundle") {
+        if (!confirm("Import bundle akan menggantikan slot yang sepadan. Teruskan?")) {
+          fileInput.value = "";
+          return;
+        }
+        for (const record of parsed.records) writeSlot(record);
+        render(root);
+        setStatus(root, `${parsed.records.length} slot diimport.`, "ok");
+      } else {
+        const incoming = parsed.records[0];
+        const record = makeSlotRecord(
+          incoming.save,
+          targetSlot,
+          new Date().toISOString(),
+          incoming.label || `Import Slot ${targetSlot}`
+        );
+        if (readSlot(targetSlot) && !confirm(`Slot ${targetSlot} sudah berisi. Gantikan?`)) {
+          fileInput.value = "";
+          return;
+        }
+        writeSlot(record);
+        render(root);
+        setStatus(root, `Save diimport ke Slot ${targetSlot}.`, "ok");
+      }
+    } catch (error) {
+      setStatus(root, error?.message || "Import gagal.", "error");
+    } finally {
+      fileInput.value = "";
+    }
+  });
+}
+
+function mountIntoSettings(host) {
+  if (!host || host.dataset.boundlessSaveMounted === "true") return;
+  host.dataset.boundlessSaveMounted = "true";
+  host.innerHTML = `
+    <section id="bc-save-manager-panel" class="bc-save-panel" aria-labelledby="bc-save-title">
+      <header class="bc-save-head">
+        <div>
+          <p class="bc-save-kicker">Data kemajuan</p>
+          <h3 id="bc-save-title">Simpan & Export</h3>
+          <p>5 slot manual · Import / Export JSON · save lama kekal serasi</p>
+        </div>
+      </header>
+
+      <div class="bc-active-save" data-role="active-summary"></div>
+      <div class="bc-save-status" role="status" aria-live="polite"></div>
+      <div class="bc-save-slots" data-role="slots"></div>
+
+      <footer class="bc-save-tools">
+        <label>
+          <span>Import ke slot</span>
+          <select id="bc-save-import-slot">
+            ${Array.from({ length: MAX_SAVE_SLOTS }, (_, i) => `<option value="${i + 1}">Slot ${i + 1}</option>`).join("")}
+          </select>
+        </label>
+        <input id="bc-save-file" type="file" accept=".json,application/json" hidden>
+        <button type="button" data-action="import">Import Save</button>
+        <button type="button" data-action="export-all">Export Semua</button>
+      </footer>
+    </section>
+  `;
+  const root = $("#bc-save-manager-panel", host);
+  bindManager(root);
+  render(root);
+}
+
+function findAndMount() {
+  const host = document.getElementById("bc-save-manager-mount");
+  if (host) mountIntoSettings(host);
+}
+
+function buildUi() {
+  findAndMount();
+  const observer = new MutationObserver(() => findAndMount());
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+  return observer;
+}
+
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", buildUi, { once: true });
 } else {
   buildUi();
 }
 
-export { buildUi, readActiveSave, readSlot };
+export { buildUi, mountIntoSettings, readActiveSave, readSlot };
