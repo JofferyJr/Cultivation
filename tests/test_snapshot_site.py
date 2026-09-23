@@ -96,4 +96,6 @@ class SnapshotTests(unittest.TestCase):
         self.assertNotIn("cdn-cgi", saved)
         self.assertNotIn("iframe", saved)
 
+
+if __name__ == "__main__":
     unittest.main()
