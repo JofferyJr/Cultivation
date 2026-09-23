@@ -2,7 +2,7 @@ name: Verify migrated Jalan Dao
 
 on:
   push:
-    branches: ["migration/sitegpt-standalone"]
+    branches: ["migration/sitegpt-standalone", "main"]
   pull_request:
     branches: ["main"]
 
