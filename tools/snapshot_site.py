@@ -26,6 +26,16 @@ _URL_PATTERNS = [
     re.compile(r'''["']((?:https?://[^"']+|/[^"']+|\./[^"']+|\.\./[^"']+))["']'''),
 ]
 
+_CLOUDFLARE_BLOCK = re.compile(
+    r"<script\b[^>]*>(?:(?!</script>).)*(?:__CF\$cv\$params|/cdn-cgi/challenge-platform)(?:(?!</script>).)*</script>",
+    re.I | re.S,
+)
+
+def _sanitize_hosting_injections(text: str, path: Path) -> str:
+    if path.suffix.lower() in {".html", ".htm"}:
+        text = _CLOUDFLARE_BLOCK.sub("", text)
+    return text
+
 @dataclass
 class Response:
     url: str
@@ -178,7 +188,7 @@ class Snapshotter:
             local_path = _safe_local_path(final_url, self.root_url)
 
             if self._is_text(response.content_type, local_path):
-                text = self._decode(response.body)
+                text = _sanitize_hosting_injections(self._decode(response.body), local_path)
                 for ref in self._extract_refs(text):
                     absolute = _strip_fragment(urljoin(final_url, ref))
                     if _same_origin(absolute, self.root_url):
@@ -195,7 +205,8 @@ class Snapshotter:
             target.parent.mkdir(parents=True, exist_ok=True)
             body = response.body
             if self._is_text(response.content_type, local_path):
-                text = self._rewrite_text(self._decode(body), url, fetched_urls)
+                text = _sanitize_hosting_injections(self._decode(body), local_path)
+                text = self._rewrite_text(text, url, fetched_urls)
                 body = text.encode("utf-8")
             target.write_bytes(body)
             files.append({
