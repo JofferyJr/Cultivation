@@ -1,0 +1,32 @@
+name: Verify migrated Jalan Dao
+
+on:
+  push:
+    branches: ["migration/sitegpt-standalone", "main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p "test_*.py"
+      - name: Release audit
+        run: python tools/release_audit.py --root . --write docs/migration/release-audit.md
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install browser test dependencies
+        run: npm install
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser smoke test
+        run: npm run test:e2e
