@@ -36,7 +36,27 @@
     });
   }
 
+  function decorateTalentGroup() {
+    const heading = Array.from(document.querySelectorAll("h2")).find((node) => node.textContent?.trim() === "Bakat");
+    const header = heading?.parentElement;
+    const section = header?.parentElement;
+    const grid = section?.querySelector(":scope > div.grid");
+    if (!header || !grid) return;
+    grid.classList.add("multi-talent-grid");
+    const buttons = Array.from(grid.querySelectorAll(":scope > button.choice-card"));
+    const selected = buttons.filter((button) => button.classList.contains("selected"));
+    buttons.forEach((button) => button.setAttribute("aria-pressed", button.classList.contains("selected") ? "true" : "false"));
+    let badge = header.querySelector(".multi-talent-count");
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "multi-talent-count";
+      header.appendChild(badge);
+    }
+    badge.textContent = `${selected.length}/4 dipilih`;
+  }
+
   function compactAll() {
+    decorateTalentGroup();
     document.querySelectorAll(".player-portrait-options").forEach((grid) => compactGrid(grid, "Pilih Muka Pemain"));
     document.querySelectorAll(".true-love-face-grid").forEach((grid) => compactGrid(grid, "Pilih Muka Pasangan"));
   }

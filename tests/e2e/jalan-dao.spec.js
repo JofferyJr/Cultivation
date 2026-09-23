@@ -1,24 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
-test('v8.1.5 isolated patch modules parse in Chromium', async ({ page }) => {
-  await page.goto('/Cultivation/v815-probe.html', { waitUntil: 'networkidle' });
-  const output = await page.locator('#out').innerText();
-  console.log('BC815_ISOLATION_PROBE', output);
-  const result = JSON.parse(output);
-  expect(result['diag-main.js']).toBe('OK');
-  expect(result['diag-helper.js']).toBe('OK');
-  expect(result['diag-ui.js']).toBe('OK');
-  expect(result['diag-inventory.js']).toBe('OK');
-});
-
 test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT', async ({ page }) => {
   const oldHostRequests = [];
-  const pageErrors = [];
-  const consoleErrors = [];
-  page.on('pageerror', error => pageErrors.push(error.stack || error.message));
-  page.on('console', msg => {
-    if (msg.type() === 'error' || msg.type() === 'warning') consoleErrors.push({type:msg.type(),text:msg.text(),location:msg.location()});
-  });
   page.on('request', request => {
     if (request.url().includes('jalan-dao-xianxia.jofferyjr.chatgpt.site')) {
       oldHostRequests.push(request.url());
@@ -28,12 +11,6 @@ test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT'
 
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
-
-  console.log('BC815_DIAG_TITLE', JSON.stringify(await page.title()));
-  console.log('BC815_DIAG_PAGE_ERRORS', JSON.stringify(pageErrors));
-  console.log('BC815_DIAG_CONSOLE_ERRORS', JSON.stringify(consoleErrors));
-  console.log('BC815_DIAG_HEAD', JSON.stringify((await page.locator('head').innerHTML()).slice(0, 3000)));
-  console.log('BC815_DIAG_BODY', JSON.stringify((await page.locator('body').innerText()).slice(0, 1200)));
 
   await expect(page).toHaveTitle(/Boundless Cultivation/i);
   await expect(page.getByText('Boundless Cultivation', { exact: true }).first()).toBeVisible();
@@ -79,6 +56,26 @@ test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT'
   await expect(page.getByText('3/4 dipilih')).toBeVisible();
   await expect(talentButtons.filter({ hasText: 'True Love' })).toHaveCount(0);
   await widthOk();
+
+  const art = await page.evaluate(async () => {
+    const all = globalThis.__JALAN_DAO_ASSETS__ || {};
+    const canonical = Object.keys(all).filter((key) => /^\/game-art\/v813\/(herbs|metals|portal)\/.+\.webp$/.test(key));
+    const representatives = [
+      '/game-art/v813/herbs/dendrobium-officinale.webp',
+      '/game-art/v813/metals/deep-black-iron.webp',
+      '/game-art/v813/portal/mata-abyss-kuno.webp',
+      '/game-art/v813/portal/kunci-portal-laut-utuh.webp',
+    ];
+    const widths = await Promise.all(representatives.map((key) => new Promise((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve(image.naturalWidth);
+      image.onerror = () => resolve(0);
+      image.src = all[key] || '';
+    })));
+    return { count: canonical.length, widths };
+  });
+  expect(art.count).toBe(27);
+  expect(art.widths.every((width) => width > 0)).toBeTruthy();
 
   const settings = page.getByRole('button', { name: 'Tetapan' }).first();
   await settings.click();

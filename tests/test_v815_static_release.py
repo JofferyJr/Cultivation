@@ -23,7 +23,9 @@ class V815StaticReleaseTests(unittest.TestCase):
         self.assertIn('[L,fe]=(0,u.useState)([`Tekun`])', self.bundle)
         self.assertIn('rootGrade:x,talents:L,background:he', self.bundle)
         self.assertNotIn('rootGrade:x,talent:L,background:he', self.bundle)
-        self.assertIn('function BC815MultiTalent', self.bundle)
+        self.assertNotIn('function BC815MultiTalent', self.bundle)
+        self.assertIn('Array.isArray(r)', self.bundle)
+        self.assertIn('BC815ToggleTalent(l,e.id,o)', self.bundle)
         self.assertIn('BC815TalentBonuses(L).manualMastery', self.bundle)
         self.assertIn('BC815TalentBonuses(L).meditation', self.bundle)
         self.assertIn('BC815TalentBonuses(L).breakthroughChance', self.bundle)
@@ -52,6 +54,11 @@ class V815StaticReleaseTests(unittest.TestCase):
         self.assertNotIn('body { overflow-x: hidden', self.css)
         self.assertNotIn('min-h-screen overflow-hidden', self.html)
         self.assertIn('/Cultivation/v815-enhancements.js', self.html)
+
+    def test_multi_talent_accessibility_is_added_after_hydration(self):
+        self.assertIn('function decorateTalentGroup()', self.enhance)
+        self.assertIn('multi-talent-count', self.enhance)
+        self.assertIn('aria-pressed', self.enhance)
 
 if __name__ == '__main__':
     unittest.main()
