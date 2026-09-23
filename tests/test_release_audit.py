@@ -17,7 +17,7 @@ class ReleaseAuditTests(unittest.TestCase):
         (root / 'site').mkdir()
         (root / 'docs/migration').mkdir(parents=True)
         (root / 'site/index.html').write_text('<div id="root">Jalan Dao</div>', encoding='utf-8')
-        marker = 'gameVersion:`8.1.3`,saveVersion:29' if version else 'gameVersion:`8.1.2`,saveVersion:28'
+        marker = 'gameVersion:8.1.4,saveVersion:29' if version else 'gameVersion:8.1.3,saveVersion:29'
         (root / 'site/app.js').write_text(marker, encoding='utf-8')
         (root / 'docs/migration/live-snapshot-manifest.json').write_text(json.dumps({
             'downloaded': 2,
@@ -26,7 +26,7 @@ class ReleaseAuditTests(unittest.TestCase):
         }), encoding='utf-8')
         return tmp, root
 
-    def test_release_audit_passes_for_clean_813_snapshot(self):
+    def test_release_audit_passes_for_clean_814_snapshot(self):
         tmp, root = self._make_root(version=True)
         try:
             result = audit_release(root)
@@ -36,7 +36,7 @@ class ReleaseAuditTests(unittest.TestCase):
         finally:
             tmp.cleanup()
 
-    def test_release_audit_rejects_wrong_version(self):
+    def test_release_audit_rejects_older_version(self):
         tmp, root = self._make_root(version=False)
         try:
             result = audit_release(root)
