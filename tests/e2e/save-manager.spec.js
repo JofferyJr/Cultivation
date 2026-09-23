@@ -22,8 +22,8 @@ test('save manager supports slots, export and import', async ({ page }) => {
 
   await dialog.getByLabel('Nama Slot 1').fill('Utama');
   await dialog.getByRole('button', { name: 'Simpan ke Slot 1' }).click();
-  await expect(dialog.locator('[data-slot="1"]')).toContainText('Li Yun');
-  await expect(dialog.locator('[data-slot="1"]')).toContainText('Utama');
+  await expect(dialog.locator('article[data-slot="1"]')).toContainText('Li Yun');
+  await expect(dialog.locator('article[data-slot="1"]')).toContainText('Utama');
 
   const downloadPromise = page.waitForEvent('download');
   await dialog.locator('button[data-action="export"][data-slot="1"]').click();
@@ -43,7 +43,7 @@ test('save manager supports slots, export and import', async ({ page }) => {
       location: 'utara'
     }))
   });
-  await expect(dialog.locator('[data-slot="2"]')).toContainText('Bing Xue');
+  await expect(dialog.locator('article[data-slot="2"]')).toContainText('Bing Xue');
 
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('boundless-cultivation-save-slot-2')));
   expect(stored.slot).toBe(2);
