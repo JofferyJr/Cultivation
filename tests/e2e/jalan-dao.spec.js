@@ -1,9 +1,23 @@
 const { test, expect } = require('@playwright/test');
 
 test('v8.1.5 page module imports directly', async ({ page }) => {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Debugger.enable');
+  const failed = [];
+  cdp.on('Debugger.scriptFailedToParse', event => {
+    failed.push({
+      url:event.url,
+      startLine:event.startLine,
+      startColumn:event.startColumn,
+      endLine:event.endLine,
+      endColumn:event.endColumn,
+      errorMessage:event.errorMessage,
+    });
+  });
   await page.goto('/Cultivation/v815-probe.html', { waitUntil: 'networkidle' });
   const output = await page.locator('#out').innerText();
   console.log('BC815_MODULE_PROBE', JSON.stringify(output));
+  console.log('BC815_PARSE_FAILURES', JSON.stringify(failed));
   expect(output).toBe('OK 8.1.5');
 });
 
