@@ -1,7 +1,7 @@
 {
   "source": "https://jalan-dao-xianxia.jofferyjr.chatgpt.site/",
   "project_base": "/Cultivation",
-  "downloaded": 73,
+  "downloaded": 72,
   "files": [
     {
       "url": "https://jalan-dao-xianxia.jofferyjr.chatgpt.site/assets/framework-CXnKph_e.js",
@@ -44,13 +44,6 @@
       "content_type": "text/javascript",
       "bytes": 694,
       "sha256": "5db5ba82eef00d1dee7e86e663098c9427d01183a88d357437daff295aec3e75"
-    },
-    {
-      "url": "https://jalan-dao-xianxia.jofferyjr.chatgpt.site/cdn-cgi/challenge-platform/h/g/scripts/jsd/330e41bb475c/main.js",
-      "path": "cdn-cgi/challenge-platform/h/g/scripts/jsd/330e41bb475c/main.js",
-      "content_type": "application/javascript",
-      "bytes": 21659,
-      "sha256": "fd11faf973a319a1a847ac7155aa730395669acebfa2e814ab8325c45b1e05ab"
     },
     {
       "url": "https://jalan-dao-xianxia.jofferyjr.chatgpt.site/favicon.svg",
@@ -504,8 +497,8 @@
       "url": "https://jalan-dao-xianxia.jofferyjr.chatgpt.site/",
       "path": "index.html",
       "content_type": "text/html",
-      "bytes": 80723,
-      "sha256": "45eb0e7353e379f0860a8ab8b31c63d0dc8196c1c3fedee1d6b55882866accd6"
+      "bytes": 79785,
+      "sha256": "264075cd87c07cbd37cf43bba773721b5fea600c9635a3f9b10df25d65089371"
     },
     {
       "url": "https://jalan-dao-xianxia.jofferyjr.chatgpt.site/world-map/xianxia_world_map_8x6.png",
