@@ -23,7 +23,7 @@ test('save manager supports slots, export and import', async ({ page }) => {
   await dialog.getByLabel('Nama Slot 1').fill('Utama');
   await dialog.getByRole('button', { name: 'Simpan ke Slot 1' }).click();
   await expect(dialog.locator('article[data-slot="1"]')).toContainText('Li Yun');
-  await expect(dialog.locator('article[data-slot="1"]')).toContainText('Utama');
+  await expect(dialog.getByLabel('Nama Slot 1')).toHaveValue('Utama');
 
   const downloadPromise = page.waitForEvent('download');
   await dialog.locator('button[data-action="export"][data-slot="1"]').click();
