@@ -1,26 +1,15 @@
 const { test, expect } = require('@playwright/test');
 
-test('v8.1.5 page module imports directly', async ({ page }) => {
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send('Debugger.enable');
-  const failed = [];
-  cdp.on('Debugger.scriptFailedToParse', event => {
-    failed.push({
-      url:event.url,
-      startLine:event.startLine,
-      startColumn:event.startColumn,
-      endLine:event.endLine,
-      endColumn:event.endColumn,
-      errorMessage:event.errorMessage,
-    });
-  });
+test('v8.1.5 isolated patch modules parse in Chromium', async ({ page }) => {
   await page.goto('/Cultivation/v815-probe.html', { waitUntil: 'networkidle' });
   const output = await page.locator('#out').innerText();
-  console.log('BC815_MODULE_PROBE', JSON.stringify(output));
-  console.log('BC815_PARSE_FAILURES', JSON.stringify(failed));
-  expect(output).toBe('OK 8.1.5');
+  console.log('BC815_ISOLATION_PROBE', output);
+  const result = JSON.parse(output);
+  expect(result['diag-main.js']).toBe('OK');
+  expect(result['diag-helper.js']).toBe('OK');
+  expect(result['diag-ui.js']).toBe('OK');
+  expect(result['diag-inventory.js']).toBe('OK');
 });
-
 
 test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT', async ({ page }) => {
   const oldHostRequests = [];
