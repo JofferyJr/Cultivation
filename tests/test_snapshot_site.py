@@ -76,5 +76,24 @@ class SnapshotTests(unittest.TestCase):
         self.assertEqual(report["failures"], [])
 
 
-if __name__ == "__main__":
+    def test_strips_cloudflare_challenge_injection_from_html(self):
+        base = "https://jalan-dao-xianxia.jofferyjr.chatgpt.site/"
+        html = b'<script src="/assets/app.js"></script><script>(function(){var a=document.createElement("iframe");window.__CF$cv$params={};a.src="/cdn-cgi/challenge-platform/scripts/jsd/main.js";})();</script>'
+        responses = {
+            base: FakeResponse(base, html, "text/html"),
+            base + "assets/app.js": FakeResponse(base + "assets/app.js", b'console.log("game")', "application/javascript"),
+        }
+
+        def fetch(url):
+            return responses[url]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            report = Snapshotter(base, "/Cultivation", fetch=fetch).snapshot(out)
+            saved = (out / "index.html").read_text()
+        self.assertEqual(report["downloaded"], 2)
+        self.assertNotIn("__CF$cv$params", saved)
+        self.assertNotIn("cdn-cgi", saved)
+        self.assertNotIn("iframe", saved)
+
     unittest.main()
