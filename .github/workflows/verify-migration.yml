@@ -2,7 +2,7 @@ name: Verify migrated Boundless Cultivation
 
 on:
   push:
-    branches: ["migration/sitegpt-standalone", "main"]
+    branches: ["migration/sitegpt-standalone", "main", "feature/boundless-v815"]
   pull_request:
     branches: ["main"]
 
@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Save manager unit tests
+        run: node --test tests/save-manager.test.mjs
       - name: Install browser test dependencies
         run: npm install
       - name: Install Chromium
