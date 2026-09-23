@@ -46,18 +46,22 @@ def audit_release(root: Path) -> dict:
                 errors.append('snapshot downloaded zero files')
 
     runtime = _runtime_text(site) if site.exists() else ''
-    version_814 = '8.1.4' in runtime
-    save_version_29 = 'saveVersion:29' in runtime or 'saveVersion":29' in runtime
-    if not version_814:
-        errors.append('required game version 8.1.4 marker not found')
-    if not save_version_29:
-        errors.append('required saveVersion 29 marker not found')
+    version_815 = 'var x_=`8.1.5`' in runtime or 'var x_="8.1.5"' in runtime
+    save_version_30 = 'saveVersion:30,gameVersion:x_' in runtime or 'saveVersion":30' in runtime
+    historical_814 = 'saveVersion:29,gameVersion:`8.1.4`' in runtime or 'saveVersion":29' in runtime
+    if not version_815:
+        errors.append('required current game version 8.1.5 marker not found')
+    if not save_version_30:
+        errors.append('required current saveVersion 30 marker not found')
+    if not historical_814:
+        errors.append('v8.1.4 save migration compatibility marker not found')
 
     return {
         'errors': errors,
         'static_errors': static_errors,
-        'version_8_1_4': version_814,
-        'save_version_29': save_version_29,
+        'version_8_1_5': version_815,
+        'save_version_30': save_version_30,
+        'historical_v814_migration': historical_814,
         'downloaded': manifest.get('downloaded', 0) if manifest else 0,
     }
 
@@ -65,13 +69,14 @@ def audit_release(root: Path) -> dict:
 def write_markdown(result: dict, path: Path) -> None:
     status = 'PASS' if not result['errors'] else 'FAIL'
     lines = [
-        '# Jalan Dao GitHub Release Audit',
+        '# Boundless Cultivation v8.1.5 GitHub Release Audit',
         '',
         f'**Status:** {status}',
         '',
-        f'- Snapshot files downloaded: {result["downloaded"]}',
-        f'- Version 8.1.4 marker: {"yes" if result["version_8_1_4"] else "no"}',
-        f'- saveVersion 29 marker: {"yes" if result["save_version_29"] else "no"}',
+        f'- Original standalone snapshot files downloaded: {result["downloaded"]}',
+        f'- Current version 8.1.5 marker: {"yes" if result["version_8_1_5"] else "no"}',
+        f'- Current saveVersion 30 marker: {"yes" if result["save_version_30"] else "no"}',
+        f'- v8.1.4 migration compatibility: {"yes" if result["historical_v814_migration"] else "no"}',
         f'- Static independence errors: {len(result["static_errors"])}',
     ]
     if result['errors']:
@@ -80,7 +85,7 @@ def write_markdown(result: dict, path: Path) -> None:
     else:
         lines.extend([
             '',
-            'The runtime snapshot is self-contained with respect to the former SiteGPT host checks in this audit.',
+            'The v8.1.5 runtime is self-contained with respect to the former SiteGPT host checks in this audit.',
         ])
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text('\n'.join(lines) + '\n', encoding='utf-8')

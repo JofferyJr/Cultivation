@@ -1,8 +1,8 @@
-name: Verify migrated Boundless Cultivation
+name: Verify Boundless Cultivation v8.1.5
 
 on:
   push:
-    branches: ["migration/sitegpt-standalone", "main"]
+    branches: ["migration/sitegpt-standalone", "release/v8.1.5", "main"]
   pull_request:
     branches: ["main"]
 
