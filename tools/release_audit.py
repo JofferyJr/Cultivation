@@ -46,17 +46,17 @@ def audit_release(root: Path) -> dict:
                 errors.append('snapshot downloaded zero files')
 
     runtime = _runtime_text(site) if site.exists() else ''
-    version_813 = '8.1.3' in runtime
+    version_814 = '8.1.4' in runtime
     save_version_29 = 'saveVersion:29' in runtime or 'saveVersion":29' in runtime
-    if not version_813:
-        errors.append('required game version 8.1.3 marker not found')
+    if not version_814:
+        errors.append('required game version 8.1.4 marker not found')
     if not save_version_29:
         errors.append('required saveVersion 29 marker not found')
 
     return {
         'errors': errors,
         'static_errors': static_errors,
-        'version_8_1_3': version_813,
+        'version_8_1_4': version_814,
         'save_version_29': save_version_29,
         'downloaded': manifest.get('downloaded', 0) if manifest else 0,
     }
@@ -70,7 +70,7 @@ def write_markdown(result: dict, path: Path) -> None:
         f'**Status:** {status}',
         '',
         f'- Snapshot files downloaded: {result["downloaded"]}',
-        f'- Version 8.1.3 marker: {"yes" if result["version_8_1_3"] else "no"}',
+        f'- Version 8.1.4 marker: {"yes" if result["version_8_1_4"] else "no"}',
         f'- saveVersion 29 marker: {"yes" if result["save_version_29"] else "no"}',
         f'- Static independence errors: {len(result["static_errors"])}',
     ]
