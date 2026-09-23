@@ -1,19 +1,25 @@
 # Jalan Dao · Dunia Xianxia
 
-Repository rasmi untuk **Jalan Dao**, game sandbox kultivasi Xianxia.
+Repository rasmi **GitHub Edition** untuk **Jalan Dao**, game sandbox kultivasi Xianxia.
 
 - Repository: `JofferyJr/Cultivation`
-- Live site asal: https://jalan-dao-xianxia.jofferyjr.chatgpt.site
-- Target migration build: **v8.1.3**
-- Platform target: GitHub Pages / static web build
+- Deployment: GitHub Pages / Static HTML
+- Mode: **standalone**
+- Auto-sync dengan site lain: **tiada**
 
-## Migration status
+## Pemisahan versi
 
-Repository ini sedang disediakan sebagai salinan GitHub bagi build Jalan Dao yang asalnya diterbitkan melalui site.
+Versi GitHub dan versi site lama dianggap sebagai dua penerbitan berasingan.
 
-Build v8.1.3 yang diterbitkan tidak akan digantikan secara senyap dengan build lama. Sumber yang masih tersedia termasuk build offline v8.1 dan pek aset PGN, tetapi migration GitHub mesti menggunakan source/build v8.1.3 sebenar apabila package tersebut tersedia.
+- Perubahan di GitHub **tidak** mengubah site lama.
+- Perubahan pada site lama **tidak** disalin ke GitHub secara automatik.
+- Tiada iframe, redirect, API sync, atau bridge ke site lama digunakan dalam build GitHub.
+- Selepas ini, perubahan khusus GitHub boleh berkembang secara bebas.
+
+## Status build
+
+Repo kini mempunyai asas Static HTML dan workflow GitHub Pages. Source production penuh game akan dimasukkan ke repo ini sebagai build GitHub tersendiri apabila pakej sumber yang sesuai tersedia.
 
 ## Project
 
-Jalan Dao merangkumi sistem seperti penciptaan watak, Spiritual Root, kultivasi, sekte, salasilah keluarga, NPC, inventori, Bestiari, Portal Laut, profesyen, artifak, hubungan dan eksplorasi dunia.
-
+Jalan Dao merangkumi sistem penciptaan watak, Spiritual Root, kultivasi, sekte, salasilah keluarga, NPC, inventori, Bestiari, Portal Laut, profesion, artifak, hubungan dan eksplorasi dunia.
