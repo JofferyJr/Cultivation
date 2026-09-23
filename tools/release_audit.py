@@ -4,7 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
-from tools.audit_static_runtime import audit_runtime, TEXT_SUFFIXES
+try:
+    from tools.audit_static_runtime import audit_runtime, TEXT_SUFFIXES
+except ModuleNotFoundError:
+    from audit_static_runtime import audit_runtime, TEXT_SUFFIXES
 
 
 def _runtime_text(site: Path) -> str:
