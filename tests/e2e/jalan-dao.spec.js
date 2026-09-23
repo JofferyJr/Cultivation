@@ -14,7 +14,7 @@ test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT'
   const consoleErrors = [];
   page.on('pageerror', error => pageErrors.push(error.stack || error.message));
   page.on('console', msg => {
-    if (msg.type() === 'error' || msg.type() === 'warning') consoleErrors.push(`${msg.type()}: ${msg.text()}`);
+    if (msg.type() === 'error' || msg.type() === 'warning') consoleErrors.push({type:msg.type(),text:msg.text(),location:msg.location()});
   });
   page.on('request', request => {
     if (request.url().includes('jalan-dao-xianxia.jofferyjr.chatgpt.site')) {
