@@ -1,9 +1,13 @@
 import json
 import tempfile
 import unittest
+import subprocess
+import sys
 from pathlib import Path
 
 from tools.release_audit import audit_release
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class ReleaseAuditTests(unittest.TestCase):
@@ -40,6 +44,15 @@ class ReleaseAuditTests(unittest.TestCase):
             self.assertTrue(any('saveVersion 29' in e for e in result['errors']))
         finally:
             tmp.cleanup()
+
+    def test_cli_runs_from_repository_root(self):
+        proc = subprocess.run(
+            [sys.executable, "tools/release_audit.py", "--root", "."],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+        self.assertNotIn("ModuleNotFoundError", proc.stderr)
 
 
 if __name__ == '__main__':
