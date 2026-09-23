@@ -2,6 +2,12 @@ const { test, expect } = require('@playwright/test');
 
 test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT', async ({ page }) => {
   const oldHostRequests = [];
+  const pageErrors = [];
+  const consoleErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.stack || error.message));
+  page.on('console', msg => {
+    if (msg.type() === 'error' || msg.type() === 'warning') consoleErrors.push(`${msg.type()}: ${msg.text()}`);
+  });
   page.on('request', request => {
     if (request.url().includes('jalan-dao-xianxia.jofferyjr.chatgpt.site')) {
       oldHostRequests.push(request.url());
@@ -11,6 +17,12 @@ test('standalone Boundless Cultivation 8.1.5 release flow works without SiteGPT'
 
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
+
+  console.log('BC815_DIAG_TITLE', JSON.stringify(await page.title()));
+  console.log('BC815_DIAG_PAGE_ERRORS', JSON.stringify(pageErrors));
+  console.log('BC815_DIAG_CONSOLE_ERRORS', JSON.stringify(consoleErrors));
+  console.log('BC815_DIAG_HEAD', JSON.stringify((await page.locator('head').innerHTML()).slice(0, 3000)));
+  console.log('BC815_DIAG_BODY', JSON.stringify((await page.locator('body').innerText()).slice(0, 1200)));
 
   await expect(page).toHaveTitle(/Boundless Cultivation/i);
   await expect(page.getByText('Boundless Cultivation', { exact: true }).first()).toBeVisible();
