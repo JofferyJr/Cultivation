@@ -95,5 +95,14 @@ class V815ReleaseTests(unittest.TestCase):
             self.assertGreater(path.stat().st_size, 0, path)
             self.assertEqual(path.read_bytes()[:4], b'RIFF', path)
 
+    def test_builtin_music_asset(self):
+        music = (ROOT / 'site/assets/v815-music.js').read_text(encoding='utf-8')
+        asset = ROOT / 'site/assets/music/ni-tian-xing-loop.ogg'
+        self.assertTrue(asset.is_file())
+        self.assertGreater(asset.stat().st_size, 5000)
+        self.assertIn('Ni Tian Xing (逆天行)', music)
+        self.assertIn('BC_BUILTIN_URL', music)
+        self.assertIn('source:"builtin"', music)
+
 if __name__ == '__main__':
     unittest.main()

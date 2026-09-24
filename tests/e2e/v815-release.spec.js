@@ -80,3 +80,18 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await expect(paper).toBeVisible();
   expect(await noHorizontalOverflow(page)).toBe(true);
 });
+
+test('built-in background music asset and settings option are available', async ({ page, request }) => {
+  const response = await request.get('/Cultivation/assets/music/ni-tian-xing-loop.ogg');
+  expect(response.ok()).toBe(true);
+  expect((await response.body()).length).toBeGreaterThan(5000);
+
+  await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'Tetapan' }).first().click();
+  const settings = page.getByRole('dialog');
+  await settings.getByRole('tab', { name: /Permainan/ }).click();
+  const select = settings.locator('#bc-music-select');
+  await expect(select).toBeVisible();
+  await expect(select.locator('option[value="builtin"]')).toContainText('Ni Tian Xing');
+  await expect(select).toHaveValue('builtin');
+});
