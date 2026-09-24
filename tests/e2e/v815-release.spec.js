@@ -30,8 +30,11 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   const paper = page.locator('#bc-portrait-paper');
   await expect(paper).toBeVisible();
   await expect(paper.getByText('Kertas Pemilihan Muka')).toBeVisible();
-  await expect(paper.getByText('Keluarga')).toBeVisible();
-  await expect(paper.getByText('Orang Awam')).toBeVisible();
+  await expect(paper.getByRole('heading', { name: 'Keluarga' })).toBeVisible();
+  await expect(paper.getByRole('heading', { name: 'Orang Awam' })).toBeVisible();
+  const firstPortraitImage = paper.locator('.bc-portrait-choice img').first();
+  await expect(firstPortraitImage).toBeVisible();
+  expect(await firstPortraitImage.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
   await paper.locator('.bc-portrait-choice').first().click();
   await expect(paper).toBeVisible();
   expect(await noHorizontalOverflow(page)).toBe(true);
