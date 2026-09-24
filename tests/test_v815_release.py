@@ -32,6 +32,7 @@ class V815ReleaseTests(unittest.TestCase):
         self.assertIn('function BC815HydrateItem', self.bundle)
         self.assertIn('.map(BC815HydrateItem)', self.bundle)
         self.assertIn('onError:()=>bcSetFailed(!0)', self.bundle)
+        self.assertIn('window.location.pathname.startsWith(`/Cultivation`)', self.bundle)
         for marker in ['Ug=Hg(`herb`', 'Wg=Hg(`metal`', 'Kg=Hg(`portal`']: self.assertIn(marker, self.bundle)
 
     def test_portrait_paper_and_width_rules(self):
