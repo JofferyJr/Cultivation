@@ -24,6 +24,14 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await age.fill('18');
   trueLove = talentGrid.locator('button').filter({ hasText: 'True Love' });
   await trueLove.click();
+  const loyal = talentGrid.locator('button').filter({ hasText: 'Setia' });
+  await loyal.click();
+  await expect(page.getByText('4/4 dipilih')).toBeVisible();
+  const greedy = talentGrid.locator('button').filter({ hasText: 'Tamak' });
+  await expect(greedy).toBeDisabled();
+  await loyal.click();
+  await expect(page.getByText('3/4 dipilih')).toBeVisible();
+  await expect(greedy).toBeEnabled();
   const playerPaperButton = page.getByRole('button', { name: 'Pilih Muka Pemain' });
   await expect(playerPaperButton).toBeVisible();
   await playerPaperButton.click();

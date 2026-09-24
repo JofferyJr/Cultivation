@@ -35,6 +35,18 @@ class V815ReleaseTests(unittest.TestCase):
         self.assertIn('window.location.pathname.startsWith(`/Cultivation`)', self.bundle)
         for marker in ['Ug=Hg(`herb`', 'Wg=Hg(`metal`', 'Kg=Hg(`portal`']: self.assertIn(marker, self.bundle)
 
+    def test_all_27_inventory_art_files_exist(self):
+        root = ROOT / 'site/game-art/v813'
+        groups = {'herbs': 9, 'metals': 10, 'portal': 8}
+        total = 0
+        for folder, expected in groups.items():
+            files = sorted((root / folder).glob('*.webp'))
+            self.assertEqual(len(files), expected, folder)
+            for path in files:
+                self.assertGreater(path.stat().st_size, 0, str(path))
+            total += len(files)
+        self.assertEqual(total, 27)
+        self.assertTrue((root / 'portal/kunci-portal-laut-utuh.webp').is_file())
     def test_portrait_paper_and_width_rules(self):
         self.assertIn('Kertas Pemilihan Muka', self.runtime)
         self.assertIn('Pilih Muka Pemain', self.runtime)
