@@ -10,7 +10,7 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await expect(page.getByText('Versi 8.1.5').first()).toBeVisible();
   const talentGrid = page.locator('.multi-talent-grid');
   await expect(talentGrid).toBeVisible();
-  await expect(page.getByText('1/4 dipilih')).toBeVisible();
+  await expect(talentGrid.getByText('1/4 dipilih', { exact: true })).toBeVisible();
   let trueLove = talentGrid.locator('button').filter({ hasText: 'True Love' });
   const honest = talentGrid.locator('button').filter({ hasText: 'Jujur' });
   await trueLove.click();
@@ -26,11 +26,11 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await trueLove.click();
   const loyal = talentGrid.locator('button').filter({ hasText: 'Setia' });
   await loyal.click();
-  await expect(page.getByText('4/4 dipilih')).toBeVisible();
+  await expect(talentGrid.getByText('4/4 dipilih', { exact: true })).toBeVisible();
   const greedy = talentGrid.locator('button').filter({ hasText: 'Tamak' });
   await expect(greedy).toBeDisabled();
   await loyal.click();
-  await expect(page.getByText('3/4 dipilih')).toBeVisible();
+  await expect(talentGrid.getByText('3/4 dipilih', { exact: true })).toBeVisible();
   await expect(greedy).toBeEnabled();
   const playerPaperButton = page.getByRole('button', { name: 'Pilih Muka Pemain' });
   await expect(playerPaperButton).toBeVisible();
