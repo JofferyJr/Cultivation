@@ -1,6 +1,8 @@
 const { test, expect } = require('@playwright/test');
 
 test('standalone Boundless Cultivation 8.1.5 hydrates without SiteGPT', async ({ page }) => {
+  page.on('pageerror', error => console.log('PAGEERROR', error.message, error.stack || ''));
+  page.on('console', msg => { if (msg.type() === 'error') console.log('CONSOLE_ERROR', msg.text()); });
   const oldHostRequests = [];
   page.on('request', request => {
     if (request.url().includes('jalan-dao-xianxia.jofferyjr.chatgpt.site')) {
