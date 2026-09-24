@@ -56,3 +56,50 @@ test('save manager lives inside Settings and supports slots, export and import',
   expect(stored.slot).toBe(2);
   expect(stored.save.name).toBe('Bing Xue');
 });
+
+test('loading a slot restores the saved active tab and map view', async ({ page }) => {
+  page.on('dialog', dialog => dialog.accept());
+  await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
+
+  await page.evaluate(() => {
+    localStorage.setItem('jalan-dao-save', JSON.stringify({
+      saveVersion: 30,
+      gameVersion: '8.1.5',
+      name: 'Li Yun',
+      gender: 'Lelaki',
+      startingAge: 18,
+      talents: ['Tekun'],
+      day: 42,
+      realm: 2,
+      realmPhase: 'Tahap Menengah',
+      mapView: 'world',
+      activeTab: 'inventory'
+    }));
+    window.__boundlessLoadCurrent();
+  });
+
+  const inventoryTab = page.getByRole('tab', { name: /Inventori/ });
+  const worldTab = page.getByRole('tab', { name: 'Dunia', exact: true });
+  await expect(inventoryTab).toHaveAttribute('aria-selected', 'true');
+
+  await page.getByRole('button', { name: 'Tetapan' }).first().click();
+  const settings = page.getByRole('dialog');
+  await settings.getByRole('tab', { name: /Permainan/ }).click();
+  const panel = settings.locator('#bc-save-manager-panel');
+  await panel.getByRole('button', { name: 'Simpan ke Slot 1' }).click();
+  await page.keyboard.press('Escape');
+
+  await worldTab.click();
+  await expect(worldTab).toHaveAttribute('aria-selected', 'true');
+
+  await page.getByRole('button', { name: 'Tetapan' }).first().click();
+  const settingsAgain = page.getByRole('dialog');
+  await settingsAgain.getByRole('tab', { name: /Permainan/ }).click();
+  await settingsAgain.locator('#bc-save-manager-panel').locator('button[data-action="load"][data-slot="1"]').click();
+  await page.keyboard.press('Escape');
+
+  await expect(inventoryTab).toHaveAttribute('aria-selected', 'true');
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('boundless-cultivation-save-slot-1')));
+  expect(saved.save.activeTab).toBe('inventory');
+  expect(saved.save.mapView).toBe('world');
+});

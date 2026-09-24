@@ -12,6 +12,7 @@ import {
 } from "./v815-save-manager-core.mjs";
 
 const $ = (selector, root = document) => root.querySelector(selector);
+const PENDING_LOAD_KEY = "boundless-cultivation-pending-load";
 
 function readJson(key) {
   const raw = localStorage.getItem(key);
@@ -173,7 +174,13 @@ function bindManager(root) {
       if (!record) return;
       if (!confirm(`Muat Slot ${slot}? Kemajuan aktif yang belum disimpan boleh hilang.`)) return;
       localStorage.setItem(LEGACY_SAVE_KEY, JSON.stringify(record.save));
-      location.reload();
+      if (typeof window.__boundlessLoadCurrent === "function") {
+        window.__boundlessLoadCurrent();
+        setStatus(root, `Slot ${slot} dimuat ke keadaan terakhir.`, "ok");
+      } else {
+        localStorage.setItem(PENDING_LOAD_KEY, JSON.stringify({ slot, requestedAt: Date.now() }));
+        location.reload();
+      }
       return;
     }
 
@@ -294,8 +301,25 @@ function findAndMount() {
   if (host) mountIntoSettings(host);
 }
 
+
+function restorePendingLoad() {
+  if (!localStorage.getItem(PENDING_LOAD_KEY)) return;
+  let attempts = 0;
+  const tryLoad = () => {
+    if (typeof window.__boundlessLoadCurrent === "function") {
+      localStorage.removeItem(PENDING_LOAD_KEY);
+      window.__boundlessLoadCurrent();
+      return;
+    }
+    attempts += 1;
+    if (attempts < 120) setTimeout(tryLoad, 50);
+  };
+  tryLoad();
+}
+
 function buildUi() {
   findAndMount();
+  restorePendingLoad();
   const observer = new MutationObserver(() => findAndMount());
   observer.observe(document.documentElement, { childList: true, subtree: true });
   return observer;

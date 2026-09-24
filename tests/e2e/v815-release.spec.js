@@ -8,6 +8,9 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
   await expect(page.getByText('Versi 8.1.5').first()).toBeVisible();
+  const creationShellWidth = await page.locator('.bc-creation-shell').evaluate(el => el.getBoundingClientRect().width);
+  expect(creationShellWidth).toBeGreaterThan(1200);
+  expect(await noHorizontalOverflow(page)).toBe(true);
   const talentGroup = page.locator('.multi-talent-group');
   const talentGrid = talentGroup.locator('.multi-talent-grid');
   await expect(talentGrid).toBeVisible();
@@ -38,6 +41,8 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await playerPaperButton.click();
   const paper = page.locator('#bc-portrait-paper');
   await expect(paper).toBeVisible();
+  const paperWidth = await paper.evaluate(el => el.getBoundingClientRect().width);
+  expect(paperWidth).toBeGreaterThan(1200);
   await expect(paper.getByText('Kertas Pemilihan Muka')).toBeVisible();
   await expect(paper.getByRole('heading', { name: 'Keluarga' })).toBeVisible();
   await expect(paper.getByRole('heading', { name: 'Orang Awam' })).toBeVisible();
@@ -74,4 +79,19 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await paper.locator('.bc-portrait-choice').first().click();
   await expect(paper).toBeVisible();
   expect(await noHorizontalOverflow(page)).toBe(true);
+});
+
+test('built-in background music asset and settings option are available', async ({ page, request }) => {
+  const response = await request.get('/Cultivation/assets/music/ni-tian-xing-loop.ogg');
+  expect(response.ok()).toBe(true);
+  expect((await response.body()).length).toBeGreaterThan(5000);
+
+  await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'Tetapan' }).first().click();
+  const settings = page.getByRole('dialog');
+  await settings.getByRole('tab', { name: /Permainan/ }).click();
+  const select = settings.locator('#bc-music-select');
+  await expect(select).toBeVisible();
+  await expect(select.locator('option[value="builtin"]')).toContainText('Ni Tian Xing');
+  await expect(select).toHaveValue('builtin');
 });

@@ -16,6 +16,9 @@ class V815ReleaseTests(unittest.TestCase):
         self.assertIn('talents:L,background:he', self.bundle)
         self.assertNotIn('talent:L,background:he', self.bundle)
         self.assertIn('function BC815Migrate', self.bundle)
+        self.assertIn('mapView:Ue,activeTab:Ge', self.bundle)
+        self.assertIn('o.activeTab', self.bundle)
+        self.assertIn('o.mapView', self.bundle)
 
     def test_multi_talent_rules_are_integrated(self):
         self.assertIn('function BC815NormalizeTalents', self.bundle)
@@ -91,6 +94,15 @@ class V815ReleaseTests(unittest.TestCase):
             self.assertTrue(path.is_file(), path)
             self.assertGreater(path.stat().st_size, 0, path)
             self.assertEqual(path.read_bytes()[:4], b'RIFF', path)
+
+    def test_builtin_music_asset(self):
+        music = (ROOT / 'site/assets/v815-music.js').read_text(encoding='utf-8')
+        asset = ROOT / 'site/assets/music/ni-tian-xing-loop.ogg'
+        self.assertTrue(asset.is_file())
+        self.assertGreater(asset.stat().st_size, 5000)
+        self.assertIn('Ni Tian Xing (逆天行)', music)
+        self.assertIn('BC_BUILTIN_URL', music)
+        self.assertIn('source:"builtin"', music)
 
 if __name__ == '__main__':
     unittest.main()
