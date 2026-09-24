@@ -31,7 +31,8 @@ class V815ReleaseTests(unittest.TestCase):
         self.assertIn('BC815Catalog=new Map(Gv.map', self.bundle)
         self.assertIn('function BC815HydrateItem', self.bundle)
         self.assertIn('.map(BC815HydrateItem)', self.bundle)
-        self.assertIn('onError:()=>bcSetFailed(!0)', self.bundle)
+        self.assertIn('bcArts=[...new Set([e.art,bcCanonical].filter(Boolean))]', self.bundle)
+        self.assertIn('onError:()=>bcSetIndex(e=>e+1)', self.bundle)
         self.assertIn('window.location.pathname.startsWith(`/Cultivation`)', self.bundle)
         for marker in ['Ug=Hg(`herb`', 'Wg=Hg(`metal`', 'Kg=Hg(`portal`']: self.assertIn(marker, self.bundle)
 
@@ -57,6 +58,34 @@ class V815ReleaseTests(unittest.TestCase):
         self.assertIn('min-width:0', self.css)
         self.assertNotIn('body{overflow-x:hidden', self.css)
         self.assertNotIn('.true-love-creation>div{align-items:center;gap:11px;display:flex}', self.base_css)
+
+    def test_all_27_approved_item_images_exist(self):
+        herbs = [
+            'dendrobium-officinale', 'tianshan-snow-lotus', 'three-tael-ginseng',
+            'polygonum-120', 'poria-60', 'wild-ganoderma', 'sea-pearl',
+            'cordyceps-sinensis', 'cistanche-deserticola',
+        ]
+        metals = [
+            'deep-black-iron', 'millennium-cold-iron', 'fallen-star-meteor-iron',
+            'moon-spirit-silver', 'solar-crow-red-gold', 'ancient-dragon-bronze',
+            'azure-cloud-steel', 'purple-thunder-ore', 'earth-vein-gold-sand',
+            'celestial-jade-iron',
+        ]
+        portal = [
+            'mata-abyss-kuno', 'prisma-kristal-palung', 'tanduk-ribut-taufan',
+            'genta-air-terjun-langit', 'kelopak-teratai-samudra', 'mutiara-inti-roh',
+            'serpihan-ais-abadi', 'kunci-portal-laut-utuh',
+        ]
+        paths = (
+            [ROOT / 'site/game-art/v813/herbs' / f'{name}.webp' for name in herbs] +
+            [ROOT / 'site/game-art/v813/metals' / f'{name}.webp' for name in metals] +
+            [ROOT / 'site/game-art/v813/portal' / f'{name}.webp' for name in portal]
+        )
+        self.assertEqual(len(paths), 27)
+        for path in paths:
+            self.assertTrue(path.is_file(), path)
+            self.assertGreater(path.stat().st_size, 0, path)
+            self.assertEqual(path.read_bytes()[:4], b'RIFF', path)
 
 if __name__ == '__main__':
     unittest.main()
