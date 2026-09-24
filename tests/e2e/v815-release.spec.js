@@ -3,6 +3,8 @@ const { test, expect } = require('@playwright/test');
 async function noHorizontalOverflow(page) { return page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth); }
 
 test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ page }) => {
+  page.on('pageerror', error => console.log('PAGEERROR', error.message, error.stack || ''));
+  page.on('console', msg => { if (msg.type() === 'error') console.log('CONSOLE_ERROR', msg.text()); });
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
   await expect(page.getByText('Versi 8.1.5').first()).toBeVisible();
