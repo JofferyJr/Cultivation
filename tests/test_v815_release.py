@@ -48,6 +48,11 @@ class V815ReleaseTests(unittest.TestCase):
             total += len(files)
         self.assertEqual(total, 27)
         self.assertTrue((root / 'portal/kunci-portal-laut-utuh.webp').is_file())
+    def test_18_29_portrait_exclusions(self):
+        self.assertIn('BC815BlockedCivilian1829=new Set([8,12,14,16,20,23,28,32,40,42,44,50,51,56,62,65,59,71,74,93,97,99,41,45])', self.bundle)
+        self.assertIn('BC815BlockedSect1829=new Set([1,2,3,4,8,9,12,13])', self.bundle)
+        self.assertIn('Zy(e)!==`18–29`||n===0', self.bundle)
+        self.assertIn('label:`Wajah Sekte ${e.index+1}`', self.bundle)
     def test_portrait_paper_and_width_rules(self):
         self.assertIn('Kertas Pemilihan Muka', self.runtime)
         self.assertIn('Pilih Muka Pemain', self.runtime)
