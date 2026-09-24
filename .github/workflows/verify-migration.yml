@@ -24,6 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Runtime syntax check
+        run: |
+          node --check site/assets/page-B87MruAb.js
+          node --check site/assets/v815-release.js
       - name: Save manager unit tests
         run: node --test tests/save-manager.test.mjs
       - name: Install browser test dependencies
