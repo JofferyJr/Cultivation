@@ -8,6 +8,9 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
   await expect(page.getByText('Versi 8.1.5').first()).toBeVisible();
+  const creationShellWidth = await page.locator('.bc-creation-shell').evaluate(el => el.getBoundingClientRect().width);
+  expect(creationShellWidth).toBeGreaterThan(1200);
+  expect(await noHorizontalOverflow(page)).toBe(true);
   const talentGroup = page.locator('.multi-talent-group');
   const talentGrid = talentGroup.locator('.multi-talent-grid');
   await expect(talentGrid).toBeVisible();
@@ -38,6 +41,8 @@ test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ 
   await playerPaperButton.click();
   const paper = page.locator('#bc-portrait-paper');
   await expect(paper).toBeVisible();
+  const paperWidth = await paper.evaluate(el => el.getBoundingClientRect().width);
+  expect(paperWidth).toBeGreaterThan(1200);
   await expect(paper.getByText('Kertas Pemilihan Muka')).toBeVisible();
   await expect(paper.getByRole('heading', { name: 'Keluarga' })).toBeVisible();
   await expect(paper.getByRole('heading', { name: 'Orang Awam' })).toBeVisible();
