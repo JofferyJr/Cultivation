@@ -7,3 +7,33 @@
 @media(max-width:1000px){.portrait-paper-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:640px){.multi-talent-grid{grid-template-columns:1fr}.portrait-paper-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bc-portrait-paper{width:calc(100vw - 16px);padding:12px}.bc-portrait-summary{align-items:stretch;flex-direction:column}.bc-portrait-open{width:100%}}
 .grotto-closed-cultivation{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;margin-bottom:14px;padding:12px 14px;border:1px solid #5b4d30;border-radius:12px;background:#0a1611}.grotto-closed-cultivation>span{display:flex;align-items:center;gap:9px;min-width:0;color:#d6b467}.grotto-closed-cultivation>span span{display:grid;min-width:0}.grotto-closed-cultivation b{color:#ead596}.grotto-closed-cultivation small{color:#81958a;overflow-wrap:anywhere}.grotto-closed-cultivation button{flex:none}@media(max-width:640px){.grotto-closed-cultivation{align-items:stretch;flex-direction:column}.grotto-closed-cultivation button{width:100%}}
+
+/* v8.1.5 layout spaciousness and overflow repair */
+.bc-character-creation{overflow-x:clip}
+.bc-creation-header,.bc-creation-shell{width:min(96vw,3000px)!important;max-width:none!important}
+.bc-creation-shell{grid-template-columns:minmax(320px,.7fr) minmax(720px,1.55fr)!important;gap:clamp(2rem,4vw,5rem)!important;padding-inline:clamp(1rem,2.8vw,3.5rem)!important}
+.bc-creation-shell>*{min-width:0}
+.bc-creation-shell>.dao-card{min-width:0}
+.bc-creation-shell [data-slot="card-content"]{padding:clamp(1.5rem,2.4vw,3rem)!important}
+.bc-creation-shell [data-slot="card-header"]{padding:clamp(1.4rem,2vw,2.5rem)!important}
+.bc-creation-shell .text-xs{font-size:.82rem!important;line-height:1.55!important}
+.bc-creation-shell .text-sm{font-size:1rem!important}
+.bc-creation-shell input,.bc-creation-shell [role="combobox"]{min-height:42px}
+.bc-creation-shell .choice-card{padding:.85rem 1rem!important}
+.bc-settings-sheet{width:min(96vw,900px)!important;max-width:min(96vw,900px)!important;overflow-x:hidden!important}
+.bc-settings-sheet>*{min-width:0}
+.bc-settings-tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important;min-width:0}
+.bc-settings-tabs [role="tab"]{min-width:0;white-space:normal;line-height:1.2;padding-inline:.55rem}
+#bc-music-manager-mount,#bc-save-manager-mount{min-width:0;max-width:100%}
+@media(max-width:1180px){
+  .bc-creation-shell{grid-template-columns:1fr!important;width:min(94vw,1120px)!important}
+  .bc-creation-shell>div:first-child{position:static!important}
+}
+@media(max-width:640px){
+  .bc-settings-sheet{width:100vw!important;max-width:100vw!important}
+  .bc-settings-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .bc-settings-tabs [role="tab"]{min-height:42px}
+  .bc-settings-sheet .settings-card{min-width:0;overflow-wrap:anywhere}
+  .bc-settings-sheet .settings-card.flex{flex-wrap:wrap}
+  .bc-creation-shell{width:100%!important;padding-inline:1rem!important}
+}
