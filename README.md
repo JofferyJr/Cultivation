@@ -1,30 +1,30 @@
-# Boundless Cultivation · Dunia Xianxia
+# Boundless Cultivation v8.1.5 · Dunia Xianxia
 
 Repository rasmi **GitHub standalone** untuk Boundless Cultivation.
 
-- Game version migrated from the published build: **8.1.4**
-- Save format marker: **saveVersion 29**
+- Game version: **8.1.5**
+- Save format: **saveVersion 30**
 - Deployment: **GitHub Pages / Static HTML**
 - Runtime source: `site/`
 - Auto-sync with the former site: **disabled**
+
+## Sorotan 8.1.5
+
+- **Kertas Pemilihan Muka** untuk pemain dan pasangan True Love menggunakan satu helaian responsif yang kekal terbuka selepas pemilihan.
+- Pemain boleh memilih **1–4 bakat** dan semua kesan digunakan secara additive.
+- **True Love** hanya tersedia apabila usia permulaan sekurang-kurangnya 18 tahun.
+- Gambar **9 herba, 10 logam, 7 serpihan Kunci Portal Laut dan 1 kunci lengkap** dipulihkan daripada aset canonical apabila save lama tidak menyimpan art.
+- Save v8.1.4 dimigrasi kepada **saveVersion 30** tanpa memadam kemajuan.
+- Layout penciptaan watak dibataskan kepada viewport tanpa global `body { overflow-x: hidden; }`.
 
 ## Play
 
 https://jofferyjr.github.io/Cultivation/
 
-## Standalone status
+## Save manager
 
-The game files in `site/` are a one-time production snapshot of the published Boundless Cultivation build. The GitHub runtime does **not** iframe, redirect to, proxy, or fetch the former SiteGPT deployment.
-
-After the one-time copy completed, the snapshot workflow was removed. Future GitHub changes are independent and do not automatically modify or re-copy the old site.
+Tetapan → Permainan mengandungi lima slot manual dengan Simpan, Muat, Padam, Import, Export dan Export Semua. Tiada butang save terapung atau quick-save pada UI utama.
 
 ## Verification
 
-The repository includes:
-
-- static-runtime audit for old-host dependencies;
-- release audit for version 8.1.4 and saveVersion 29;
-- unit tests for migration tooling;
-- a Playwright browser smoke test that blocks the former SiteGPT host, loads `/Cultivation/`, hydrates the game, and opens **Tetapan**.
-
-GitHub Pages deploys only the `site/` directory.
+Repository menjalankan static-runtime audit, release audit 8.1.5/saveVersion 30, unit tests dan Playwright browser tests untuk hydration, save manager, multi-talent, True Love, Kertas Pemilihan Muka dan kawalan overflow.

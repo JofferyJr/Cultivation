@@ -2,7 +2,7 @@ name: Verify migrated Boundless Cultivation
 
 on:
   push:
-    branches: ["migration/sitegpt-standalone", "main", "feature/boundless-v815"]
+    branches: ["migration/sitegpt-standalone", "main", "feature/boundless-v815", "feature/boundless-v815-release"]
   pull_request:
     branches: ["main"]
 

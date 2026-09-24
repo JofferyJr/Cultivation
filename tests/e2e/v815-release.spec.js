@@ -1,0 +1,56 @@
+const { test, expect } = require('@playwright/test');
+
+async function noHorizontalOverflow(page) { return page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth); }
+
+test('v8.1.5 talents, True Love and portrait paper remain responsive', async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
+  await expect(page.getByText('Versi 8.1.5').first()).toBeVisible();
+  const talentGrid = page.locator('.multi-talent-grid');
+  await expect(talentGrid).toBeVisible();
+  await expect(page.getByText('1/4 dipilih')).toBeVisible();
+  let trueLove = talentGrid.locator('button').filter({ hasText: 'True Love' });
+  const honest = talentGrid.locator('button').filter({ hasText: 'Jujur' });
+  await trueLove.click();
+  await honest.click();
+  await expect(trueLove).toHaveAttribute('aria-pressed', 'true');
+  await expect(honest).toHaveAttribute('aria-pressed', 'true');
+  const age = page.locator('#starting-age');
+  await age.fill('17');
+  await expect(talentGrid.locator('button').filter({ hasText: 'True Love' })).toHaveCount(0);
+  await expect(honest).toHaveAttribute('aria-pressed', 'true');
+  await age.fill('18');
+  trueLove = talentGrid.locator('button').filter({ hasText: 'True Love' });
+  await trueLove.click();
+  const playerPaperButton = page.getByRole('button', { name: 'Pilih Muka Pemain' });
+  await expect(playerPaperButton).toBeVisible();
+  await playerPaperButton.click();
+  const paper = page.locator('#bc-portrait-paper');
+  await expect(paper).toBeVisible();
+  await expect(paper.getByText('Kertas Pemilihan Muka')).toBeVisible();
+  await expect(paper.getByText('Keluarga')).toBeVisible();
+  await expect(paper.getByText('Orang Awam')).toBeVisible();
+  await paper.locator('.bc-portrait-choice').first().click();
+  await expect(paper).toBeVisible();
+  expect(await noHorizontalOverflow(page)).toBe(true);
+  let columns = await paper.locator('.portrait-paper-grid').first().evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
+  expect(columns).toBe(6);
+  await page.setViewportSize({ width: 800, height: 900 });
+  columns = await paper.locator('.portrait-paper-grid').first().evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
+  expect(columns).toBe(4);
+  expect(await noHorizontalOverflow(page)).toBe(true);
+  await page.setViewportSize({ width: 640, height: 900 });
+  columns = await paper.locator('.portrait-paper-grid').first().evaluate(el => getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
+  expect(columns).toBe(2);
+  expect(await noHorizontalOverflow(page)).toBe(true);
+  await paper.getByRole('button', { name: 'Tutup Kertas Pemilihan Muka' }).click();
+  await expect(paper).not.toBeVisible();
+  await page.setViewportSize({ width: 1366, height: 900 });
+  const partnerButton = page.getByRole('button', { name: 'Pilih Muka Pasangan' });
+  await expect(partnerButton).toBeVisible();
+  await partnerButton.click();
+  await expect(paper).toBeVisible();
+  await paper.locator('.bc-portrait-choice').first().click();
+  await expect(paper).toBeVisible();
+  expect(await noHorizontalOverflow(page)).toBe(true);
+});
