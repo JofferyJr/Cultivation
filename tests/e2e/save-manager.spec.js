@@ -79,7 +79,7 @@ test('loading a slot restores the saved active tab and map view', async ({ page 
   });
 
   const inventoryTab = page.getByRole('tab', { name: /Inventori/ });
-  const worldTab = page.getByRole('tab', { name: /Dunia/ });
+  const worldTab = page.getByRole('tab', { name: 'Dunia', exact: true });
   await expect(inventoryTab).toHaveAttribute('aria-selected', 'true');
 
   await page.getByRole('button', { name: 'Tetapan' }).first().click();
