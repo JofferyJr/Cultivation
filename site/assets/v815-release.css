@@ -37,3 +37,117 @@
   .bc-settings-sheet .settings-card.flex{flex-wrap:wrap}
   .bc-creation-shell{width:100%!important;padding-inline:1rem!important}
 }
+
+
+/* Boundless staged restoration · Stage 1
+   Desktop UI uses available space generously; mobile remains responsive. */
+@media (min-width: 1181px) {
+  .boundless-stage1-spacious body { font-size: 17px; }
+
+  .boundless-stage1-spacious .game-header {
+    min-height: 82px;
+    padding: 14px 32px;
+    gap: 28px;
+  }
+
+  .boundless-stage1-spacious .resource-row { gap: 24px; }
+  .boundless-stage1-spacious .resource { min-width: 92px; gap: 10px; }
+  .boundless-stage1-spacious .resource small { font-size: 10px; }
+  .boundless-stage1-spacious .resource b { font-size: 14px; }
+
+  .boundless-stage1-spacious main > .mx-auto.grid.max-w-\[1800px\] {
+    width: min(98vw, 2400px);
+    max-width: 2400px;
+    grid-template-columns: 340px minmax(0, 1fr) !important;
+    gap: 28px;
+    padding: 28px 32px 44px;
+  }
+
+  .boundless-stage1-spacious .dao-card {
+    border-radius: 16px;
+  }
+
+  .boundless-stage1-spacious .avatar-ring {
+    width: 108px;
+    height: 108px;
+  }
+
+  .boundless-stage1-spacious .player-avatar-ring img,
+  .boundless-stage1-spacious .avatar-ring img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .boundless-stage1-spacious .inventory-layout {
+    grid-template-columns: minmax(0, 1.7fr) minmax(360px, .7fr);
+    gap: 20px;
+  }
+
+  .boundless-stage1-spacious .inventory-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .boundless-stage1-spacious .inventory-item {
+    grid-template-columns: 64px minmax(0, 1fr);
+    min-height: 126px;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .boundless-stage1-spacious .inventory-item-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .boundless-stage1-spacious .inventory-item-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .boundless-stage1-spacious .inventory-item-copy b { font-size: 14px; }
+  .boundless-stage1-spacious .inventory-item-copy small { font-size: 11px; }
+
+  .boundless-stage1-spacious .region-map-stage {
+    min-width: 960px;
+  }
+
+  .boundless-stage1-spacious .region-map-stage > img {
+    object-fit: contain;
+    background: #050d0a;
+  }
+
+  .boundless-stage1-spacious .bc-settings-sheet {
+    width: min(96vw, 1780px) !important;
+    max-width: min(96vw, 1780px) !important;
+  }
+
+  .boundless-stage1-spacious .bc-creation-header,
+  .boundless-stage1-spacious .bc-creation-shell {
+    width: min(97vw, 2400px) !important;
+  }
+
+  .boundless-stage1-spacious .bc-creation-shell {
+    grid-template-columns: minmax(420px, .72fr) minmax(900px, 1.6fr) !important;
+    gap: clamp(3rem, 5vw, 7rem) !important;
+  }
+
+  .boundless-stage1-spacious .bc-portrait-paper {
+    width: min(97vw, 1900px);
+  }
+
+  .boundless-stage1-spacious .portrait-paper-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: .8rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .boundless-stage1-spacious .inventory-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
