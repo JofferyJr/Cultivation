@@ -5,11 +5,11 @@ test('standalone Boundless Cultivation 8.1.5 hydrates without SiteGPT', async ({
   page.on('console', msg => { if (msg.type() === 'error') console.log('CONSOLE_ERROR', msg.text()); });
   const oldHostRequests = [];
   page.on('request', request => {
-    if (request.url().includes('jalan-dao-xianxia.jofferyjr.chatgpt.site')) {
+    if (request.url().includes('legacy-source.invalid')) {
       oldHostRequests.push(request.url());
     }
   });
-  await page.route('**://jalan-dao-xianxia.jofferyjr.chatgpt.site/**', route => route.abort());
+  await page.route('**://legacy-source.invalid/**', route => route.abort());
 
   await page.goto('/Cultivation/', { waitUntil: 'networkidle' });
   await expect(page).toHaveTitle(/Boundless Cultivation/i);

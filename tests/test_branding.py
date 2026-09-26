@@ -14,11 +14,11 @@ class BrandingTests(unittest.TestCase):
 
     def test_internal_save_key_remains_compatible(self):
         bundle = (ROOT / "site/assets/page-B87MruAb.js").read_text(encoding="utf-8")
-        self.assertIn("jalan-dao-save", bundle)
+        self.assertIn("boundless-save", bundle)
 
     def test_lore_dao_path_label_is_not_renamed(self):
         bundle = (ROOT / "site/assets/page-B87MruAb.js").read_text(encoding="utf-8")
-        self.assertIn("Profesion, Jalan Dao dan sifat penerima", bundle)
+        self.assertIn("Profesion, laluan kultivasi dan sifat penerima", bundle)
 
 if __name__ == "__main__":
     unittest.main()

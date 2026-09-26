@@ -41,3 +41,53 @@ function refreshSummaries(){
 }
 function boot(){refreshSummaries();let scheduled=false;const observer=new MutationObserver(mutations=>{if(mutations.every(m=>m.target.closest?.("#bc-portrait-paper-overlay")))return;if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;refreshSummaries();});});observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:["aria-checked","class"]});}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+
+/* Boundless staged restoration · Stage 1
+ * Transparent runtime corrections only. No asset deletion or opaque payloads.
+ * Guardian display names are corrected here while the historical compiled bundle
+ * remains untouched during staged recovery.
+ */
+const BC_STAGE1_GUARDIAN_RENAMES = new Map([
+  ["Long Canghai", "Shui Canglan"],
+  ["Huang Liuli", "Yue Liuying"],
+]);
+
+function bcStage1RenameGuardians(root = document) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = walker.nextNode())) {
+    const replacement = BC_STAGE1_GUARDIAN_RENAMES.get(node.nodeValue?.trim());
+    if (replacement) node.nodeValue = node.nodeValue.replace(node.nodeValue.trim(), replacement);
+  }
+  root.querySelectorAll?.("[alt],[title],[aria-label]").forEach((el) => {
+    for (const attr of ["alt", "title", "aria-label"]) {
+      const value = el.getAttribute(attr);
+      if (!value) continue;
+      let next = value;
+      for (const [oldName, newName] of BC_STAGE1_GUARDIAN_RENAMES) {
+        next = next.replaceAll(oldName, newName);
+      }
+      if (next !== value) el.setAttribute(attr, next);
+    }
+  });
+}
+
+function bcStage1Boot() {
+  document.documentElement.classList.add("boundless-stage1-spacious");
+  bcStage1RenameGuardians();
+  let pending = false;
+  new MutationObserver(() => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => {
+      pending = false;
+      bcStage1RenameGuardians();
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bcStage1Boot, { once: true });
+} else {
+  bcStage1Boot();
+}
