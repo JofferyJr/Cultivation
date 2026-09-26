@@ -79,6 +79,63 @@ function bcArmPlayback(){
   document.addEventListener("pointerdown",resume,{once:true,capture:true});
   document.addEventListener("keydown",resume,{once:true,capture:true});
 }
+function bcMusicPlaybackSnapshot(){
+  const audio=bcAudio;
+  if(!audio||!audio.src)return null;
+  const settings=bcMusicSettings();
+  return {source:settings.source,currentTime:Number.isFinite(audio.currentTime)?Math.max(0,audio.currentTime):0,playing:!audio.paused&&!audio.ended};
+}
+function bcRestoreMusicPlayback(state){
+  if(!state||!state.source||state.source==="off")return;
+  const audio=bcEnsureAudio();
+  const apply=async()=>{
+    if(bcMusicSettings().source!==state.source){
+      bcSaveMusicSettings({...bcMusicSettings(),source:state.source});
+      await bcApplySelected(false);
+    }
+    const target=Number(state.currentTime);
+    if(Number.isFinite(target)&&target>=0){try{audio.currentTime=target;}catch{}}
+    if(state.playing)try{await audio.play();}catch{}
+  };
+  if(audio.readyState>=1)apply();
+  else audio.addEventListener("loadedmetadata",apply,{once:true});
+}
+function bcInstallSaveLoadMusicHooks(){
+  if(typeof window==="undefined")return false;
+  if(typeof window.__boundlessSaveCurrent==="function"&&!window.__boundlessSaveCurrent.__musicWrapped){
+    const originalSave=window.__boundlessSaveCurrent;
+    const wrappedSave=function(...args){
+      originalSave.apply(this,args);
+      try{
+        const raw=JSON.parse(localStorage.getItem("boundless-save")||"null");
+        if(raw&&typeof raw==="object"){
+          raw.musicPlayback=bcMusicPlaybackSnapshot();
+          localStorage.setItem("boundless-save",JSON.stringify(raw));
+        }
+      }catch{}
+    };
+    wrappedSave.__musicWrapped=true;
+    window.__boundlessSaveCurrent=wrappedSave;
+  }
+  if(typeof window.__boundlessLoadCurrent==="function"&&!window.__boundlessLoadCurrent.__musicWrapped){
+    const originalLoad=window.__boundlessLoadCurrent;
+    const wrappedLoad=function(...args){
+      const raw=(()=>{try{return JSON.parse(localStorage.getItem("boundless-save")||"null");}catch{return null;}})();
+      const state=raw?.musicPlayback||null;
+      bcEnsureAudio().pause();
+      originalLoad.apply(this,args);
+      setTimeout(()=>bcRestoreMusicPlayback(state),0);
+    };
+    wrappedLoad.__musicWrapped=true;
+    window.__boundlessLoadCurrent=wrappedLoad;
+  }
+  return typeof window.__boundlessSaveCurrent==="function"&&typeof window.__boundlessLoadCurrent==="function";
+}
+function bcWatchSaveLoadMusicHooks(){
+  if(bcInstallSaveLoadMusicHooks())return;
+  let attempts=0;
+  const timer=setInterval(()=>{if(bcInstallSaveLoadMusicHooks()||++attempts>=120)clearInterval(timer);},50);
+}
 function bcEscape(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 async function bcRenderMusic(host){
   const track=await bcGetTrack().catch(()=>null),settings=bcMusicSettings();
@@ -151,6 +208,7 @@ async function bcMountMusic(){
 async function bcBootMusic(){
   await bcApplySelected(false);
   bcArmPlayback();
+  bcWatchSaveLoadMusicHooks();
   bcMountMusic();
   new MutationObserver(()=>bcMountMusic()).observe(document.documentElement,{subtree:true,childList:true});
 }
