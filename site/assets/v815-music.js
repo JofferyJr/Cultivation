@@ -4,18 +4,20 @@ const BC_MUSIC_SLOT="slot-1";
 const BC_MUSIC_SETTINGS="boundless-cultivation-music-settings";
 const BC_BUILTIN_URL="/Cultivation/assets/music/ni-tian-xing-loop.ogg";
 const BC_BUILTIN_NAME="Ni Tian Xing (逆天行) · Latar Bawaan";
+const BC_XIAN_URL="/Cultivation/assets/music/Xian%20Dao%20Chang%20(%E4%BB%99%E9%81%93%E9%95%BF).mp3";
+const BC_XIAN_NAME="Xian Dao Chang (仙道长) · Muzik Repo";
 let bcAudio=null;
 let bcObjectUrl=null;
 
 function bcMusicSettings(){
   try{
     const raw=JSON.parse(localStorage.getItem(BC_MUSIC_SETTINGS)||"{}");
-    const source=["builtin","slot1","off"].includes(raw.source)?raw.source:(raw.enabled===false?"off":"builtin");
+    const source=["builtin","xian","slot1","off"].includes(raw.source)?raw.source:(raw.enabled===false?"off":"builtin");
     return {enabled:source!=="off",volume:Number.isFinite(Number(raw.volume))?Math.max(0,Math.min(1,Number(raw.volume))):.32,source};
   }catch{return {enabled:true,volume:.32,source:"builtin"};}
 }
 function bcSaveMusicSettings(next){
-  const source=["builtin","slot1","off"].includes(next.source)?next.source:"builtin";
+  const source=["builtin","xian","slot1","off"].includes(next.source)?next.source:"builtin";
   localStorage.setItem(BC_MUSIC_SETTINGS,JSON.stringify({...next,source,enabled:source!=="off"}));
 }
 function bcOpenMusicDb(){
@@ -55,7 +57,9 @@ async function bcApplySelected(play=false){
   const settings=bcMusicSettings(),audio=bcClearAudio();
   audio.volume=settings.volume;
   if(settings.source==="off")return;
-  if(settings.source==="slot1"){
+  if(settings.source==="xian"){
+    audio.src=BC_XIAN_URL;
+  }else if(settings.source==="slot1"){
     const track=await bcGetTrack().catch(()=>null);
     if(track?.blob){
       bcObjectUrl=URL.createObjectURL(track.blob);
@@ -80,14 +84,17 @@ async function bcRenderMusic(host){
   const track=await bcGetTrack().catch(()=>null),settings=bcMusicSettings();
   const status=settings.source==="builtin"
     ?"Aktif selepas interaksi pertama: "+BC_BUILTIN_NAME+"."
-    :settings.source==="slot1"&&track
-      ?"Tersimpan: "+bcEscape(track.name)
-      :"Muzik dimatikan.";
+    :settings.source==="xian"
+      ?"Aktif selepas interaksi pertama: "+BC_XIAN_NAME+"."
+      :settings.source==="slot1"&&track
+        ?"Tersimpan: "+bcEscape(track.name)
+        :"Muzik dimatikan.";
   host.innerHTML=`<section class="bc-music-panel" aria-labelledby="bc-music-title">
     <header><div><p>Muzik permainan</p><h3 id="bc-music-title">Muzik Latar</h3><small>Ni Tian Xing (逆天行) tersedia sebagai trek bawaan. Slot Muzik 1 menyimpan MP3 pilihan anda pada pelayar ini.</small></div></header>
     <div class="bc-music-row">
       <label><span>Pilihan lagu</span><select id="bc-music-select">
         <option value="builtin" ${settings.source==="builtin"?"selected":""}>${BC_BUILTIN_NAME}</option>
+        <option value="xian" ${settings.source==="xian"?"selected":""}>${BC_XIAN_NAME}</option>
         <option value="slot1" ${settings.source==="slot1"?"selected":""} ${track?"":"disabled"}>${track?"Slot Muzik 1 · "+bcEscape(track.name):"Slot Muzik 1 · kosong"}</option>
         <option value="off" ${settings.source==="off"?"selected":""}>Tiada muzik</option>
       </select></label>
